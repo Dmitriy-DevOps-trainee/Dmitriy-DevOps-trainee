@@ -1,0 +1,20 @@
+[Dima@test ~]$ touch file_name{1,2,3}.md
+[Dima@test ~]$ ls
+file_name1.md  file_name2.md  file_name3.md 
+
+[Dima@test ~]$ mv file_name1.{md,textdoc}
+[Dima@test ~]$ ls
+file_name1.textdoc  file_name3.md  file_name2.md 
+
+[Dima@test ~]$ mv file_name2{.md,}
+[Dima@test ~]$ ls
+file_name1.textdoc  file_name2  file_name3.md 
+
+[Dima@test ~]$ mv file_name3.md{,.latest}
+[Dima@test ~]$ ls
+file_name1.textdoc  file_name2   file_name3.md.latest 
+
+[Dima@test ~]$ mv file_name1.{textdoc,txt}
+[Dima@test ~]$ ls
+file_name1.txt  file_name2  file_name3.md.latest  
+ 
