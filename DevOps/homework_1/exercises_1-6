@@ -1,0 +1,265 @@
+Ex.1
+[Dima@test ~]$ ls /usr/share/man/man*/*config**
+/usr/share/man/man1/pkg-config.1.gz
+/usr/share/man/man1/yum-config-manager.1.gz
+/usr/share/man/man5/config.5ssl.gz
+/usr/share/man/man5/config-util.5.gz
+/usr/share/man/man5/selinux_config.5.gz
+/usr/share/man/man5/ssh_config.5.gz
+/usr/share/man/man5/sshd_config.5.gz
+/usr/share/man/man5/x509v3_config.5ssl.gz
+/usr/share/man/man8/abrt-configuration.8.gz
+/usr/share/man/man8/authconfig.8.gz
+/usr/share/man/man8/authconfig-tui.8.gz
+/usr/share/man/man8/chkconfig.8.gz
+/usr/share/man/man8/grub2-mkconfig.8.gz
+/usr/share/man/man8/ifconfig.8.gz
+/usr/share/man/man8/iprconfig.8.gz
+/usr/share/man/man8/ldconfig.8.gz
+/usr/share/man/man8/lvm-config.8.gz
+/usr/share/man/man8/lvmconfig.8.gz
+/usr/share/man/man8/lvm-dumpconfig.8.gz
+/usr/share/man/man8/plipconfig.8.gz
+/usr/share/man/man8/sg_get_config.8.gz
+/usr/share/man/man8/sys-unconfig.8.gz
+/usr/share/man/man8/vdodumpconfig.8.gz
+
+[Dima@test ~]$ ls /usr/share/man/man{1,7}/*system*
+/usr/share/man/man1/systemctl.1.gz
+/usr/share/man/man1/systemd.1.gz
+/usr/share/man/man1/systemd-analyze.1.gz
+/usr/share/man/man1/systemd-ask-password.1.gz
+/usr/share/man/man1/systemd-bootchart.1.gz
+/usr/share/man/man1/systemd-cat.1.gz
+/usr/share/man/man1/systemd-cgls.1.gz
+/usr/share/man/man1/systemd-cgtop.1.gz
+/usr/share/man/man1/systemd-delta.1.gz
+/usr/share/man/man1/systemd-detect-virt.1.gz
+/usr/share/man/man1/systemd-escape.1.gz
+/usr/share/man/man1/systemd-firstboot.1.gz
+/usr/share/man/man1/systemd-firstboot.service.1.gz
+/usr/share/man/man1/systemd-inhibit.1.gz
+/usr/share/man/man1/systemd-machine-id-commit.1.gz
+/usr/share/man/man1/systemd-machine-id-setup.1.gz
+/usr/share/man/man1/systemd-notify.1.gz
+/usr/share/man/man1/systemd-nspawn.1.gz
+/usr/share/man/man1/systemd-path.1.gz
+/usr/share/man/man1/systemd-run.1.gz
+/usr/share/man/man1/systemd-tty-ask-password-agent.1.gz
+/usr/share/man/man7/lvmsystemid.7.gz
+/usr/share/man/man7/nfs.systemd.7.gz
+/usr/share/man/man7/systemd.directives.7.gz
+/usr/share/man/man7/systemd.generator.7.gz
+/usr/share/man/man7/systemd.index.7.gz
+/usr/share/man/man7/systemd.journal-fields.7.gz
+/usr/share/man/man7/systemd.special.7.gz
+/usr/share/man/man7/systemd.time.7.gz
+
+Ex.2
+[Dima@test ~]$ sudo find /usr/share/man -name *help.*
+/usr/share/man/man1/help.1.gz
+
+[Dima@test ~]$ sudo find /usr/share/man -name conf*
+/usr/share/man/man3/confstr.3.gz
+/usr/share/man/man3p/confstr.3p.gz
+/usr/share/man/man5/config.5ssl.gz
+/usr/share/man/man5/config-util.5.gz
+/usr/share/man/overrides/man1/config.guess.1.gz
+/usr/share/man/overrides/man1/config.sub.1.gz
+/usr/share/man/overrides/man3/confstr.3.gz
+
+Ex.3
+[Dima@test ~]$ head /etc/yum.conf -n 7
+[main]
+cachedir=/var/cache/yum/$basearch/$releasever
+keepcache=0
+debuglevel=2
+logfile=/var/log/yum.log
+exactarch=1
+obsoletes=1
+
+[Dima@test ~]$ tail /etc/fstab -n 2
+UUID=3b530d17-9091-4832-a964-e6a0df34febc /boot                   xfs     defaults        0 0
+/dev/mapper/centos_test-swap swap                    swap    defaults        0 0
+
+[Dima@test ~]$ wc /etc/fstab -l
+11 /etc/fstab
+[Dima@test ~]$ head wc /etc/fstab -n 100
+head: cannot open ‘wc’ for reading: No such file or directory
+==> /etc/fstab <==
+
+#
+# /etc/fstab
+# Created by anaconda on Sat Nov 27 23:07:04 2021
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/centos_test-root /                       xfs     defaults        0 0
+UUID=3b530d17-9091-4832-a964-e6a0df34febc /boot                   xfs     defaults        0 0
+/dev/mapper/centos_test-swap swap                    swap    defaults        0 0
+
+Ex.4
+[Dima@test ~]$ touch file_name{1,2,3}.md
+[Dima@test ~]$ ls
+file_name1.md  file_name2.md  file_name3.md 
+
+[Dima@test ~]$ mv file_name1.{md,textdoc}
+[Dima@test ~]$ ls
+file_name1.textdoc  file_name3.md  file_name2.md 
+
+[Dima@test ~]$ mv file_name2{.md,}
+[Dima@test ~]$ ls
+file_name1.textdoc  file_name2  file_name3.md 
+
+[Dima@test ~]$ mv file_name3.md{,.latest}
+[Dima@test ~]$ ls
+file_name1.textdoc  file_name2   file_name3.md.latest 
+
+[Dima@test ~]$ mv file_name1.{textdoc,txt}
+[Dima@test ~]$ ls
+file_name1.txt  file_name2  file_name3.md.latest  
+
+Ex.5
+[Dima@test ~]$ cd /mnt
+[Dima@test mnt]$
+
+[Dima@test mnt]$ cd ~
+[Dima@test ~]$
+
+[Dima@test mnt]$ cd /home/Dima
+[Dima@test ~]$
+
+Ex.6
+[Dima@test ~]$ mkdir -p new in-process/tread{0,1,2} processed
+[Dima@test ~]$ ls
+new  in-process  processed
+
+[Dima@test ~]$ ls in-process
+tread0  tread1  tread2
+
+[Dima@test ~]$ cd new
+[Dima@test new]$ touch data[[:digit:]][[:digit:]]-{001..100}
+[Dima@test new]$ ls
+data[[:digit:]][[:digit:]]-001  data[[:digit:]][[:digit:]]-051
+data[[:digit:]][[:digit:]]-002  data[[:digit:]][[:digit:]]-052
+data[[:digit:]][[:digit:]]-003  data[[:digit:]][[:digit:]]-053
+data[[:digit:]][[:digit:]]-004  data[[:digit:]][[:digit:]]-054
+data[[:digit:]][[:digit:]]-005  data[[:digit:]][[:digit:]]-055
+data[[:digit:]][[:digit:]]-006  data[[:digit:]][[:digit:]]-056
+data[[:digit:]][[:digit:]]-007  data[[:digit:]][[:digit:]]-057
+data[[:digit:]][[:digit:]]-008  data[[:digit:]][[:digit:]]-058
+data[[:digit:]][[:digit:]]-009  data[[:digit:]][[:digit:]]-059
+data[[:digit:]][[:digit:]]-010  data[[:digit:]][[:digit:]]-060
+data[[:digit:]][[:digit:]]-011  data[[:digit:]][[:digit:]]-061
+data[[:digit:]][[:digit:]]-012  data[[:digit:]][[:digit:]]-062
+data[[:digit:]][[:digit:]]-013  data[[:digit:]][[:digit:]]-063
+data[[:digit:]][[:digit:]]-014  data[[:digit:]][[:digit:]]-064
+data[[:digit:]][[:digit:]]-015  data[[:digit:]][[:digit:]]-065
+data[[:digit:]][[:digit:]]-016  data[[:digit:]][[:digit:]]-066
+data[[:digit:]][[:digit:]]-017  data[[:digit:]][[:digit:]]-067
+data[[:digit:]][[:digit:]]-018  data[[:digit:]][[:digit:]]-068
+data[[:digit:]][[:digit:]]-019  data[[:digit:]][[:digit:]]-069
+data[[:digit:]][[:digit:]]-020  data[[:digit:]][[:digit:]]-070
+data[[:digit:]][[:digit:]]-021  data[[:digit:]][[:digit:]]-071
+data[[:digit:]][[:digit:]]-022  data[[:digit:]][[:digit:]]-072
+data[[:digit:]][[:digit:]]-023  data[[:digit:]][[:digit:]]-073
+data[[:digit:]][[:digit:]]-024  data[[:digit:]][[:digit:]]-074
+data[[:digit:]][[:digit:]]-025  data[[:digit:]][[:digit:]]-075
+data[[:digit:]][[:digit:]]-026  data[[:digit:]][[:digit:]]-076
+data[[:digit:]][[:digit:]]-027  data[[:digit:]][[:digit:]]-077
+data[[:digit:]][[:digit:]]-028  data[[:digit:]][[:digit:]]-078
+data[[:digit:]][[:digit:]]-029  data[[:digit:]][[:digit:]]-079
+data[[:digit:]][[:digit:]]-030  data[[:digit:]][[:digit:]]-080
+data[[:digit:]][[:digit:]]-031  data[[:digit:]][[:digit:]]-081
+data[[:digit:]][[:digit:]]-032  data[[:digit:]][[:digit:]]-082
+data[[:digit:]][[:digit:]]-033  data[[:digit:]][[:digit:]]-083
+data[[:digit:]][[:digit:]]-034  data[[:digit:]][[:digit:]]-084
+data[[:digit:]][[:digit:]]-035  data[[:digit:]][[:digit:]]-085
+data[[:digit:]][[:digit:]]-036  data[[:digit:]][[:digit:]]-086
+data[[:digit:]][[:digit:]]-037  data[[:digit:]][[:digit:]]-087
+data[[:digit:]][[:digit:]]-038  data[[:digit:]][[:digit:]]-088
+data[[:digit:]][[:digit:]]-039  data[[:digit:]][[:digit:]]-089
+data[[:digit:]][[:digit:]]-040  data[[:digit:]][[:digit:]]-090
+data[[:digit:]][[:digit:]]-041  data[[:digit:]][[:digit:]]-091
+data[[:digit:]][[:digit:]]-042  data[[:digit:]][[:digit:]]-092
+data[[:digit:]][[:digit:]]-043  data[[:digit:]][[:digit:]]-093
+data[[:digit:]][[:digit:]]-044  data[[:digit:]][[:digit:]]-094
+data[[:digit:]][[:digit:]]-045  data[[:digit:]][[:digit:]]-095
+data[[:digit:]][[:digit:]]-046  data[[:digit:]][[:digit:]]-096
+data[[:digit:]][[:digit:]]-047  data[[:digit:]][[:digit:]]-097
+data[[:digit:]][[:digit:]]-048  data[[:digit:]][[:digit:]]-098
+data[[:digit:]][[:digit:]]-049  data[[:digit:]][[:digit:]]-099
+data[[:digit:]][[:digit:]]-050  data[[:digit:]][[:digit:]]-100
+
+[Dima@test ~]$ cp /home/Dima/new/data[[:digit:]][[:digit:]]-{001..034} /home/Dima/in-process/tread0
+[Dima@test ~]$ cd in-process
+[Dima@test in-process]$ cd tread0
+[Dima@test tread0]$ ls
+data[[:digit:]][[:digit:]]-001  data[[:digit:]][[:digit:]]-018
+data[[:digit:]][[:digit:]]-002  data[[:digit:]][[:digit:]]-019
+data[[:digit:]][[:digit:]]-003  data[[:digit:]][[:digit:]]-020
+data[[:digit:]][[:digit:]]-004  data[[:digit:]][[:digit:]]-021
+data[[:digit:]][[:digit:]]-005  data[[:digit:]][[:digit:]]-022
+data[[:digit:]][[:digit:]]-006  data[[:digit:]][[:digit:]]-023
+data[[:digit:]][[:digit:]]-007  data[[:digit:]][[:digit:]]-024
+data[[:digit:]][[:digit:]]-008  data[[:digit:]][[:digit:]]-025
+data[[:digit:]][[:digit:]]-009  data[[:digit:]][[:digit:]]-026
+data[[:digit:]][[:digit:]]-010  data[[:digit:]][[:digit:]]-027
+data[[:digit:]][[:digit:]]-011  data[[:digit:]][[:digit:]]-028
+data[[:digit:]][[:digit:]]-012  data[[:digit:]][[:digit:]]-029
+data[[:digit:]][[:digit:]]-013  data[[:digit:]][[:digit:]]-030
+data[[:digit:]][[:digit:]]-014  data[[:digit:]][[:digit:]]-031
+data[[:digit:]][[:digit:]]-015  data[[:digit:]][[:digit:]]-032
+data[[:digit:]][[:digit:]]-016  data[[:digit:]][[:digit:]]-033
+data[[:digit:]][[:digit:]]-017  data[[:digit:]][[:digit:]]-034
+
+[Dima@test ~]$ cp /home/Dima/new/data[[:digit:]][[:digit:]]-{035..067} /home/Dima/in-process/tread1
+[Dima@test ~]$ cd in-process
+[Dima@test in-process]$ cd tread1
+[Dima@test tread1]$ ls
+data[[:digit:]][[:digit:]]-035  data[[:digit:]][[:digit:]]-052
+data[[:digit:]][[:digit:]]-036  data[[:digit:]][[:digit:]]-053
+data[[:digit:]][[:digit:]]-037  data[[:digit:]][[:digit:]]-054
+data[[:digit:]][[:digit:]]-038  data[[:digit:]][[:digit:]]-055
+data[[:digit:]][[:digit:]]-039  data[[:digit:]][[:digit:]]-056
+data[[:digit:]][[:digit:]]-040  data[[:digit:]][[:digit:]]-057
+data[[:digit:]][[:digit:]]-041  data[[:digit:]][[:digit:]]-058
+data[[:digit:]][[:digit:]]-042  data[[:digit:]][[:digit:]]-059
+data[[:digit:]][[:digit:]]-043  data[[:digit:]][[:digit:]]-060
+data[[:digit:]][[:digit:]]-044  data[[:digit:]][[:digit:]]-061
+data[[:digit:]][[:digit:]]-045  data[[:digit:]][[:digit:]]-062
+data[[:digit:]][[:digit:]]-046  data[[:digit:]][[:digit:]]-063
+data[[:digit:]][[:digit:]]-047  data[[:digit:]][[:digit:]]-064
+data[[:digit:]][[:digit:]]-048  data[[:digit:]][[:digit:]]-065
+data[[:digit:]][[:digit:]]-049  data[[:digit:]][[:digit:]]-066
+data[[:digit:]][[:digit:]]-050  data[[:digit:]][[:digit:]]-067
+data[[:digit:]][[:digit:]]-051
+
+[Dima@test ~]$ cp /home/Dima/new/data[[:digit:]][[:digit:]]-{068..100} /home/Dima/in-process/tread2
+[Dima@test ~]$ cd in-process
+[Dima@test in-process]$ cd tread2
+[Dima@test tread2]$ ls
+data[[:digit:]][[:digit:]]-068  data[[:digit:]][[:digit:]]-085
+data[[:digit:]][[:digit:]]-069  data[[:digit:]][[:digit:]]-086
+data[[:digit:]][[:digit:]]-070  data[[:digit:]][[:digit:]]-087
+data[[:digit:]][[:digit:]]-071  data[[:digit:]][[:digit:]]-088
+data[[:digit:]][[:digit:]]-072  data[[:digit:]][[:digit:]]-089
+data[[:digit:]][[:digit:]]-073  data[[:digit:]][[:digit:]]-090
+data[[:digit:]][[:digit:]]-074  data[[:digit:]][[:digit:]]-091
+data[[:digit:]][[:digit:]]-075  data[[:digit:]][[:digit:]]-092
+data[[:digit:]][[:digit:]]-076  data[[:digit:]][[:digit:]]-093
+data[[:digit:]][[:digit:]]-077  data[[:digit:]][[:digit:]]-094
+data[[:digit:]][[:digit:]]-078  data[[:digit:]][[:digit:]]-095
+data[[:digit:]][[:digit:]]-079  data[[:digit:]][[:digit:]]-096
+data[[:digit:]][[:digit:]]-080  data[[:digit:]][[:digit:]]-097
+data[[:digit:]][[:digit:]]-081  data[[:digit:]][[:digit:]]-098
+data[[:digit:]][[:digit:]]-082  data[[:digit:]][[:digit:]]-099
+data[[:digit:]][[:digit:]]-083  data[[:digit:]][[:digit:]]-100
+data[[:digit:]][[:digit:]]-084
+
+[Dima@test in-process]$ ls -l
+total 12
+drwxrwxr-x. 2 Dima Dima 4096 Dec  1 16:02 tread0
+drwxrwxr-x. 2 Dima Dima 4096 Dec  1 16:09 tread1
+drwxrwxr-x. 2 Dima Dima 4096 Dec  1 16:11 tread2
