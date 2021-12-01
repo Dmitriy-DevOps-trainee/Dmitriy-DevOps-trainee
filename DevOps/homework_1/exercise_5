@@ -1,0 +1,8 @@
+[Dima@test ~]$ cd /mnt
+[Dima@test mnt]$
+
+[Dima@test mnt]$ cd ~
+[Dima@test ~]$
+
+[Dima@test mnt]$ cd /home/Dima
+[Dima@test ~]$
