@@ -9,3 +9,19 @@ obsoletes=1
 [Dima@test ~]$ tail /etc/fstab -n 2
 UUID=3b530d17-9091-4832-a964-e6a0df34febc /boot                   xfs     defaults        0 0
 /dev/mapper/centos_test-swap swap                    swap    defaults        0 0
+[Dima@test ~]$ wc /etc/fstab -l
+11 /etc/fstab
+[Dima@test ~]$ head wc /etc/fstab -n 100
+head: cannot open ‘wc’ for reading: No such file or directory
+==> /etc/fstab <==
+
+#
+# /etc/fstab
+# Created by anaconda on Sat Nov 27 23:07:04 2021
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/centos_test-root /                       xfs     defaults        0 0
+UUID=3b530d17-9091-4832-a964-e6a0df34febc /boot                   xfs     defaults        0 0
+/dev/mapper/centos_test-swap swap                    swap    defaults        0 0
