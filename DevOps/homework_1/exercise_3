@@ -1,0 +1,11 @@
+[Dima@test ~]$ head /etc/yum.conf -n 7
+[main]
+cachedir=/var/cache/yum/$basearch/$releasever
+keepcache=0
+debuglevel=2
+logfile=/var/log/yum.log
+exactarch=1
+obsoletes=1
+[Dima@test ~]$ tail /etc/fstab -n 2
+UUID=3b530d17-9091-4832-a964-e6a0df34febc /boot                   xfs     defaults        0 0
+/dev/mapper/centos_test-swap swap                    swap    defaults        0 0
