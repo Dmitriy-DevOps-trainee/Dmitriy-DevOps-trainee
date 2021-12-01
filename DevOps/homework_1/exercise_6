@@ -1,0 +1,5 @@
+[Dima@test ~]$ mkdir -p new in-process/tread{0,1,2} processed
+[Dima@test ~]$ ls
+new  in-process  processed
+[Dima@test ~]$ ls in-process
+tread0  tread1  tread2
