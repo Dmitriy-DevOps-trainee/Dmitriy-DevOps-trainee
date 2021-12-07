@@ -1,5 +1,32 @@
 Ex.1
-[Dima@test ~]$ ls /usr/share/man/man*/*config**
+[Dima@test ~]$ ls /usr/share/man/man{0..9}{,x,X}/*config**
+ls: cannot access /usr/share/man/man0/*config**: No such file or directory
+ls: cannot access /usr/share/man/man0x/*config**: No such file or directory
+ls: cannot access /usr/share/man/man0X/*config**: No such file or directory
+ls: cannot access /usr/share/man/man1x/*config**: No such file or directory
+ls: cannot access /usr/share/man/man1X/*config**: No such file or directory
+ls: cannot access /usr/share/man/man2/*config**: No such file or directory
+ls: cannot access /usr/share/man/man2x/*config**: No such file or directory
+ls: cannot access /usr/share/man/man2X/*config**: No such file or directory
+ls: cannot access /usr/share/man/man3/*config**: No such file or directory
+ls: cannot access /usr/share/man/man3x/*config**: No such file or directory
+ls: cannot access /usr/share/man/man3X/*config**: No such file or directory
+ls: cannot access /usr/share/man/man4/*config**: No such file or directory
+ls: cannot access /usr/share/man/man4x/*config**: No such file or directory
+ls: cannot access /usr/share/man/man4X/*config**: No such file or directory
+ls: cannot access /usr/share/man/man5x/*config**: No such file or directory
+ls: cannot access /usr/share/man/man5X/*config**: No such file or directory
+ls: cannot access /usr/share/man/man6/*config**: No such file or directory
+ls: cannot access /usr/share/man/man6x/*config**: No such file or directory
+ls: cannot access /usr/share/man/man6X/*config**: No such file or directory
+ls: cannot access /usr/share/man/man7/*config**: No such file or directory
+ls: cannot access /usr/share/man/man7x/*config**: No such file or directory
+ls: cannot access /usr/share/man/man7X/*config**: No such file or directory
+ls: cannot access /usr/share/man/man8x/*config**: No such file or directory
+ls: cannot access /usr/share/man/man8X/*config**: No such file or directory
+ls: cannot access /usr/share/man/man9/*config**: No such file or directory
+ls: cannot access /usr/share/man/man9x/*config**: No such file or directory
+ls: cannot access /usr/share/man/man9X/*config**: No such file or directory
 /usr/share/man/man1/pkg-config.1.gz
 /usr/share/man/man1/yum-config-manager.1.gz
 /usr/share/man/man5/config.5ssl.gz
@@ -56,8 +83,14 @@ Ex.1
 /usr/share/man/man7/systemd.time.7.gz
 
 Ex.2
-[Dima@test ~]$ sudo find /usr/share/man -name *help.*
+[Dima@test ~]$ find /usr/share/man/ -name "*help*"
 /usr/share/man/man1/help.1.gz
+/usr/share/man/man5/firewalld.helper.5.gz
+/usr/share/man/man8/mkhomedir_helper.8.gz
+/usr/share/man/man8/pwhistory_helper.8.gz
+/usr/share/man/man8/ssh-pkcs11-helper.8.gz
+/usr/share/man/man8/consolehelper.8.gz
+/usr/share/man/man8/userhelper.8.gz
 
 [Dima@test ~]$ sudo find /usr/share/man -name conf*
 /usr/share/man/man3/confstr.3.gz
@@ -139,124 +172,51 @@ new  in-process  processed
 tread0  tread1  tread2
 
 [Dima@test ~]$ cd new
-[Dima@test new]$ touch data[[:digit:]][[:digit:]]-{001..100}
+[Dima@test new]$ touch data{001..100}
 [Dima@test new]$ ls
-data[[:digit:]][[:digit:]]-001  data[[:digit:]][[:digit:]]-051
-data[[:digit:]][[:digit:]]-002  data[[:digit:]][[:digit:]]-052
-data[[:digit:]][[:digit:]]-003  data[[:digit:]][[:digit:]]-053
-data[[:digit:]][[:digit:]]-004  data[[:digit:]][[:digit:]]-054
-data[[:digit:]][[:digit:]]-005  data[[:digit:]][[:digit:]]-055
-data[[:digit:]][[:digit:]]-006  data[[:digit:]][[:digit:]]-056
-data[[:digit:]][[:digit:]]-007  data[[:digit:]][[:digit:]]-057
-data[[:digit:]][[:digit:]]-008  data[[:digit:]][[:digit:]]-058
-data[[:digit:]][[:digit:]]-009  data[[:digit:]][[:digit:]]-059
-data[[:digit:]][[:digit:]]-010  data[[:digit:]][[:digit:]]-060
-data[[:digit:]][[:digit:]]-011  data[[:digit:]][[:digit:]]-061
-data[[:digit:]][[:digit:]]-012  data[[:digit:]][[:digit:]]-062
-data[[:digit:]][[:digit:]]-013  data[[:digit:]][[:digit:]]-063
-data[[:digit:]][[:digit:]]-014  data[[:digit:]][[:digit:]]-064
-data[[:digit:]][[:digit:]]-015  data[[:digit:]][[:digit:]]-065
-data[[:digit:]][[:digit:]]-016  data[[:digit:]][[:digit:]]-066
-data[[:digit:]][[:digit:]]-017  data[[:digit:]][[:digit:]]-067
-data[[:digit:]][[:digit:]]-018  data[[:digit:]][[:digit:]]-068
-data[[:digit:]][[:digit:]]-019  data[[:digit:]][[:digit:]]-069
-data[[:digit:]][[:digit:]]-020  data[[:digit:]][[:digit:]]-070
-data[[:digit:]][[:digit:]]-021  data[[:digit:]][[:digit:]]-071
-data[[:digit:]][[:digit:]]-022  data[[:digit:]][[:digit:]]-072
-data[[:digit:]][[:digit:]]-023  data[[:digit:]][[:digit:]]-073
-data[[:digit:]][[:digit:]]-024  data[[:digit:]][[:digit:]]-074
-data[[:digit:]][[:digit:]]-025  data[[:digit:]][[:digit:]]-075
-data[[:digit:]][[:digit:]]-026  data[[:digit:]][[:digit:]]-076
-data[[:digit:]][[:digit:]]-027  data[[:digit:]][[:digit:]]-077
-data[[:digit:]][[:digit:]]-028  data[[:digit:]][[:digit:]]-078
-data[[:digit:]][[:digit:]]-029  data[[:digit:]][[:digit:]]-079
-data[[:digit:]][[:digit:]]-030  data[[:digit:]][[:digit:]]-080
-data[[:digit:]][[:digit:]]-031  data[[:digit:]][[:digit:]]-081
-data[[:digit:]][[:digit:]]-032  data[[:digit:]][[:digit:]]-082
-data[[:digit:]][[:digit:]]-033  data[[:digit:]][[:digit:]]-083
-data[[:digit:]][[:digit:]]-034  data[[:digit:]][[:digit:]]-084
-data[[:digit:]][[:digit:]]-035  data[[:digit:]][[:digit:]]-085
-data[[:digit:]][[:digit:]]-036  data[[:digit:]][[:digit:]]-086
-data[[:digit:]][[:digit:]]-037  data[[:digit:]][[:digit:]]-087
-data[[:digit:]][[:digit:]]-038  data[[:digit:]][[:digit:]]-088
-data[[:digit:]][[:digit:]]-039  data[[:digit:]][[:digit:]]-089
-data[[:digit:]][[:digit:]]-040  data[[:digit:]][[:digit:]]-090
-data[[:digit:]][[:digit:]]-041  data[[:digit:]][[:digit:]]-091
-data[[:digit:]][[:digit:]]-042  data[[:digit:]][[:digit:]]-092
-data[[:digit:]][[:digit:]]-043  data[[:digit:]][[:digit:]]-093
-data[[:digit:]][[:digit:]]-044  data[[:digit:]][[:digit:]]-094
-data[[:digit:]][[:digit:]]-045  data[[:digit:]][[:digit:]]-095
-data[[:digit:]][[:digit:]]-046  data[[:digit:]][[:digit:]]-096
-data[[:digit:]][[:digit:]]-047  data[[:digit:]][[:digit:]]-097
-data[[:digit:]][[:digit:]]-048  data[[:digit:]][[:digit:]]-098
-data[[:digit:]][[:digit:]]-049  data[[:digit:]][[:digit:]]-099
-data[[:digit:]][[:digit:]]-050  data[[:digit:]][[:digit:]]-100
+data001  data013  data025  data037  data049  data061  data073  data085  data097
+data002  data014  data026  data038  data050  data062  data074  data086  data098
+data003  data015  data027  data039  data051  data063  data075  data087  data099
+data004  data016  data028  data040  data052  data064  data076  data088  data100
+data005  data017  data029  data041  data053  data065  data077  data089
+data006  data018  data030  data042  data054  data066  data078  data090
+data007  data019  data031  data043  data055  data067  data079  data091
+data008  data020  data032  data044  data056  data068  data080  data092
+data009  data021  data033  data045  data057  data069  data081  data093
+data010  data022  data034  data046  data058  data070  data082  data094
+data011  data023  data035  data047  data059  data071  data083  data095
+data012  data024  data036  data048  data060  data072  data084  data096
 
-[Dima@test ~]$ cp /home/Dima/new/data[[:digit:]][[:digit:]]-{001..034} /home/Dima/in-process/tread0
+
+[Dima@test ~]$ cp /home/Dima/new/data{001..034} /home/Dima/in-process/tread0
 [Dima@test ~]$ cd in-process
 [Dima@test in-process]$ cd tread0
 [Dima@test tread0]$ ls
-data[[:digit:]][[:digit:]]-001  data[[:digit:]][[:digit:]]-018
-data[[:digit:]][[:digit:]]-002  data[[:digit:]][[:digit:]]-019
-data[[:digit:]][[:digit:]]-003  data[[:digit:]][[:digit:]]-020
-data[[:digit:]][[:digit:]]-004  data[[:digit:]][[:digit:]]-021
-data[[:digit:]][[:digit:]]-005  data[[:digit:]][[:digit:]]-022
-data[[:digit:]][[:digit:]]-006  data[[:digit:]][[:digit:]]-023
-data[[:digit:]][[:digit:]]-007  data[[:digit:]][[:digit:]]-024
-data[[:digit:]][[:digit:]]-008  data[[:digit:]][[:digit:]]-025
-data[[:digit:]][[:digit:]]-009  data[[:digit:]][[:digit:]]-026
-data[[:digit:]][[:digit:]]-010  data[[:digit:]][[:digit:]]-027
-data[[:digit:]][[:digit:]]-011  data[[:digit:]][[:digit:]]-028
-data[[:digit:]][[:digit:]]-012  data[[:digit:]][[:digit:]]-029
-data[[:digit:]][[:digit:]]-013  data[[:digit:]][[:digit:]]-030
-data[[:digit:]][[:digit:]]-014  data[[:digit:]][[:digit:]]-031
-data[[:digit:]][[:digit:]]-015  data[[:digit:]][[:digit:]]-032
-data[[:digit:]][[:digit:]]-016  data[[:digit:]][[:digit:]]-033
-data[[:digit:]][[:digit:]]-017  data[[:digit:]][[:digit:]]-034
+data001  data005  data009  data013  data017  data021  data025  data029  data033
+data002  data006  data010  data014  data018  data022  data026  data030  data034
+data003  data007  data011  data015  data019  data023  data027  data031
+data004  data008  data012  data016  data020  data024  data028  data032
 
-[Dima@test ~]$ cp /home/Dima/new/data[[:digit:]][[:digit:]]-{035..067} /home/Dima/in-process/tread1
+
+[Dima@test ~]$ cp /home/Dima/new/data{035..067} /home/Dima/in-process/tread1
 [Dima@test ~]$ cd in-process
 [Dima@test in-process]$ cd tread1
 [Dima@test tread1]$ ls
-data[[:digit:]][[:digit:]]-035  data[[:digit:]][[:digit:]]-052
-data[[:digit:]][[:digit:]]-036  data[[:digit:]][[:digit:]]-053
-data[[:digit:]][[:digit:]]-037  data[[:digit:]][[:digit:]]-054
-data[[:digit:]][[:digit:]]-038  data[[:digit:]][[:digit:]]-055
-data[[:digit:]][[:digit:]]-039  data[[:digit:]][[:digit:]]-056
-data[[:digit:]][[:digit:]]-040  data[[:digit:]][[:digit:]]-057
-data[[:digit:]][[:digit:]]-041  data[[:digit:]][[:digit:]]-058
-data[[:digit:]][[:digit:]]-042  data[[:digit:]][[:digit:]]-059
-data[[:digit:]][[:digit:]]-043  data[[:digit:]][[:digit:]]-060
-data[[:digit:]][[:digit:]]-044  data[[:digit:]][[:digit:]]-061
-data[[:digit:]][[:digit:]]-045  data[[:digit:]][[:digit:]]-062
-data[[:digit:]][[:digit:]]-046  data[[:digit:]][[:digit:]]-063
-data[[:digit:]][[:digit:]]-047  data[[:digit:]][[:digit:]]-064
-data[[:digit:]][[:digit:]]-048  data[[:digit:]][[:digit:]]-065
-data[[:digit:]][[:digit:]]-049  data[[:digit:]][[:digit:]]-066
-data[[:digit:]][[:digit:]]-050  data[[:digit:]][[:digit:]]-067
-data[[:digit:]][[:digit:]]-051
+data035  data039  data043  data047  data051  data055  data059  data063  data067
+data036  data040  data044  data048  data052  data056  data060  data064
+data037  data041  data045  data049  data053  data057  data061  data065
+data038  data042  data046  data050  data054  data058  data062  data066
 
-[Dima@test ~]$ cp /home/Dima/new/data[[:digit:]][[:digit:]]-{068..100} /home/Dima/in-process/tread2
+
+[Dima@test ~]$ cp /home/Dima/new/data{068..100} /home/Dima/in-process/tread2
 [Dima@test ~]$ cd in-process
 [Dima@test in-process]$ cd tread2
 [Dima@test tread2]$ ls
-data[[:digit:]][[:digit:]]-068  data[[:digit:]][[:digit:]]-085
-data[[:digit:]][[:digit:]]-069  data[[:digit:]][[:digit:]]-086
-data[[:digit:]][[:digit:]]-070  data[[:digit:]][[:digit:]]-087
-data[[:digit:]][[:digit:]]-071  data[[:digit:]][[:digit:]]-088
-data[[:digit:]][[:digit:]]-072  data[[:digit:]][[:digit:]]-089
-data[[:digit:]][[:digit:]]-073  data[[:digit:]][[:digit:]]-090
-data[[:digit:]][[:digit:]]-074  data[[:digit:]][[:digit:]]-091
-data[[:digit:]][[:digit:]]-075  data[[:digit:]][[:digit:]]-092
-data[[:digit:]][[:digit:]]-076  data[[:digit:]][[:digit:]]-093
-data[[:digit:]][[:digit:]]-077  data[[:digit:]][[:digit:]]-094
-data[[:digit:]][[:digit:]]-078  data[[:digit:]][[:digit:]]-095
-data[[:digit:]][[:digit:]]-079  data[[:digit:]][[:digit:]]-096
-data[[:digit:]][[:digit:]]-080  data[[:digit:]][[:digit:]]-097
-data[[:digit:]][[:digit:]]-081  data[[:digit:]][[:digit:]]-098
-data[[:digit:]][[:digit:]]-082  data[[:digit:]][[:digit:]]-099
-data[[:digit:]][[:digit:]]-083  data[[:digit:]][[:digit:]]-100
-data[[:digit:]][[:digit:]]-084
+data068  data072  data076  data080  data084  data088  data092  data096  data100
+data069  data073  data077  data081  data085  data089  data093  data097
+data070  data074  data078  data082  data086  data090  data094  data098
+data071  data075  data079  data083  data087  data091  data095  data099
+
 
 [Dima@test in-process]$ ls -l
 total 12
@@ -271,208 +231,209 @@ drwxrwxr-x. 2 Dima Dima 4096 Dec  1 16:11 tread2
 tread0  tread1  tread2
 
 [Dima@test processed]$ find /home/Dima -name data*
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-001
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-002
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-003
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-004
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-005
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-006
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-007
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-008
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-009
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-010
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-011
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-012
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-013
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-014
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-015
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-016
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-017
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-018
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-019
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-020
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-021
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-022
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-023
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-024
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-025
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-026
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-027
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-028
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-029
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-030
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-031
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-032
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-033
-/home/Dima/processed/tread0/data[[:digit:]][[:digit:]]-034
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-035
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-036
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-037
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-038
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-039
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-040
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-041
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-042
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-043
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-044
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-045
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-046
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-047
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-048
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-049
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-050
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-051
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-052
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-053
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-054
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-055
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-056
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-057
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-058
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-059
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-060
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-061
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-062
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-063
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-064
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-065
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-066
-/home/Dima/processed/tread1/data[[:digit:]][[:digit:]]-067
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-068
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-069
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-070
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-071
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-072
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-073
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-074
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-075
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-076
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-077
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-078
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-079
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-080
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-081
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-082
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-083
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-084
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-085
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-086
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-087
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-088
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-089
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-090
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-091
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-092
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-093
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-094
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-095
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-096
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-097
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-098
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-099
-/home/Dima/processed/tread2/data[[:digit:]][[:digit:]]-100
-/home/Dima/new/data[[:digit:]][[:digit:]]-001
-/home/Dima/new/data[[:digit:]][[:digit:]]-002
-/home/Dima/new/data[[:digit:]][[:digit:]]-003
-/home/Dima/new/data[[:digit:]][[:digit:]]-004
-/home/Dima/new/data[[:digit:]][[:digit:]]-005
-/home/Dima/new/data[[:digit:]][[:digit:]]-006
-/home/Dima/new/data[[:digit:]][[:digit:]]-007
-/home/Dima/new/data[[:digit:]][[:digit:]]-008
-/home/Dima/new/data[[:digit:]][[:digit:]]-009
-/home/Dima/new/data[[:digit:]][[:digit:]]-010
-/home/Dima/new/data[[:digit:]][[:digit:]]-011
-/home/Dima/new/data[[:digit:]][[:digit:]]-012
-/home/Dima/new/data[[:digit:]][[:digit:]]-013
-/home/Dima/new/data[[:digit:]][[:digit:]]-014
-/home/Dima/new/data[[:digit:]][[:digit:]]-015
-/home/Dima/new/data[[:digit:]][[:digit:]]-016
-/home/Dima/new/data[[:digit:]][[:digit:]]-017
-/home/Dima/new/data[[:digit:]][[:digit:]]-018
-/home/Dima/new/data[[:digit:]][[:digit:]]-019
-/home/Dima/new/data[[:digit:]][[:digit:]]-020
-/home/Dima/new/data[[:digit:]][[:digit:]]-021
-/home/Dima/new/data[[:digit:]][[:digit:]]-022
-/home/Dima/new/data[[:digit:]][[:digit:]]-023
-/home/Dima/new/data[[:digit:]][[:digit:]]-024
-/home/Dima/new/data[[:digit:]][[:digit:]]-025
-/home/Dima/new/data[[:digit:]][[:digit:]]-026
-/home/Dima/new/data[[:digit:]][[:digit:]]-027
-/home/Dima/new/data[[:digit:]][[:digit:]]-028
-/home/Dima/new/data[[:digit:]][[:digit:]]-029
-/home/Dima/new/data[[:digit:]][[:digit:]]-030
-/home/Dima/new/data[[:digit:]][[:digit:]]-031
-/home/Dima/new/data[[:digit:]][[:digit:]]-032
-/home/Dima/new/data[[:digit:]][[:digit:]]-033
-/home/Dima/new/data[[:digit:]][[:digit:]]-034
-/home/Dima/new/data[[:digit:]][[:digit:]]-035
-/home/Dima/new/data[[:digit:]][[:digit:]]-036
-/home/Dima/new/data[[:digit:]][[:digit:]]-037
-/home/Dima/new/data[[:digit:]][[:digit:]]-038
-/home/Dima/new/data[[:digit:]][[:digit:]]-039
-/home/Dima/new/data[[:digit:]][[:digit:]]-040
-/home/Dima/new/data[[:digit:]][[:digit:]]-041
-/home/Dima/new/data[[:digit:]][[:digit:]]-042
-/home/Dima/new/data[[:digit:]][[:digit:]]-043
-/home/Dima/new/data[[:digit:]][[:digit:]]-044
-/home/Dima/new/data[[:digit:]][[:digit:]]-045
-/home/Dima/new/data[[:digit:]][[:digit:]]-046
-/home/Dima/new/data[[:digit:]][[:digit:]]-047
-/home/Dima/new/data[[:digit:]][[:digit:]]-048
-/home/Dima/new/data[[:digit:]][[:digit:]]-049
-/home/Dima/new/data[[:digit:]][[:digit:]]-050
-/home/Dima/new/data[[:digit:]][[:digit:]]-051
-/home/Dima/new/data[[:digit:]][[:digit:]]-052
-/home/Dima/new/data[[:digit:]][[:digit:]]-053
-/home/Dima/new/data[[:digit:]][[:digit:]]-054
-/home/Dima/new/data[[:digit:]][[:digit:]]-055
-/home/Dima/new/data[[:digit:]][[:digit:]]-056
-/home/Dima/new/data[[:digit:]][[:digit:]]-057
-/home/Dima/new/data[[:digit:]][[:digit:]]-058
-/home/Dima/new/data[[:digit:]][[:digit:]]-059
-/home/Dima/new/data[[:digit:]][[:digit:]]-060
-/home/Dima/new/data[[:digit:]][[:digit:]]-061
-/home/Dima/new/data[[:digit:]][[:digit:]]-062
-/home/Dima/new/data[[:digit:]][[:digit:]]-063
-/home/Dima/new/data[[:digit:]][[:digit:]]-064
-/home/Dima/new/data[[:digit:]][[:digit:]]-065
-/home/Dima/new/data[[:digit:]][[:digit:]]-066
-/home/Dima/new/data[[:digit:]][[:digit:]]-067
-/home/Dima/new/data[[:digit:]][[:digit:]]-068
-/home/Dima/new/data[[:digit:]][[:digit:]]-069
-/home/Dima/new/data[[:digit:]][[:digit:]]-070
-/home/Dima/new/data[[:digit:]][[:digit:]]-071
-/home/Dima/new/data[[:digit:]][[:digit:]]-072
-/home/Dima/new/data[[:digit:]][[:digit:]]-073
-/home/Dima/new/data[[:digit:]][[:digit:]]-074
-/home/Dima/new/data[[:digit:]][[:digit:]]-075
-/home/Dima/new/data[[:digit:]][[:digit:]]-076
-/home/Dima/new/data[[:digit:]][[:digit:]]-077
-/home/Dima/new/data[[:digit:]][[:digit:]]-078
-/home/Dima/new/data[[:digit:]][[:digit:]]-079
-/home/Dima/new/data[[:digit:]][[:digit:]]-080
-/home/Dima/new/data[[:digit:]][[:digit:]]-081
-/home/Dima/new/data[[:digit:]][[:digit:]]-082
-/home/Dima/new/data[[:digit:]][[:digit:]]-083
-/home/Dima/new/data[[:digit:]][[:digit:]]-084
-/home/Dima/new/data[[:digit:]][[:digit:]]-085
-/home/Dima/new/data[[:digit:]][[:digit:]]-086
-/home/Dima/new/data[[:digit:]][[:digit:]]-087
-/home/Dima/new/data[[:digit:]][[:digit:]]-088
-/home/Dima/new/data[[:digit:]][[:digit:]]-089
-/home/Dima/new/data[[:digit:]][[:digit:]]-090
-/home/Dima/new/data[[:digit:]][[:digit:]]-091
-/home/Dima/new/data[[:digit:]][[:digit:]]-092
-/home/Dima/new/data[[:digit:]][[:digit:]]-093
-/home/Dima/new/data[[:digit:]][[:digit:]]-094
-/home/Dima/new/data[[:digit:]][[:digit:]]-095
-/home/Dima/new/data[[:digit:]][[:digit:]]-096
-/home/Dima/new/data[[:digit:]][[:digit:]]-097
-/home/Dima/new/data[[:digit:]][[:digit:]]-098
-/home/Dima/new/data[[:digit:]][[:digit:]]-099
-/home/Dima/new/data[[:digit:]][[:digit:]]-100
+/home/Dima/processed/tread0/data001
+/home/Dima/processed/tread0/data002
+/home/Dima/processed/tread0/data003
+/home/Dima/processed/tread0/data004
+/home/Dima/processed/tread0/data005
+/home/Dima/processed/tread0/data006
+/home/Dima/processed/tread0/data007
+/home/Dima/processed/tread0/data008
+/home/Dima/processed/tread0/data009
+/home/Dima/processed/tread0/data010
+/home/Dima/processed/tread0/data011
+/home/Dima/processed/tread0/data012
+/home/Dima/processed/tread0/data013
+/home/Dima/processed/tread0/data014
+/home/Dima/processed/tread0/data015
+/home/Dima/processed/tread0/data016
+/home/Dima/processed/tread0/data017
+/home/Dima/processed/tread0/data018
+/home/Dima/processed/tread0/data019
+/home/Dima/processed/tread0/data020
+/home/Dima/processed/tread0/data021
+/home/Dima/processed/tread0/data022
+/home/Dima/processed/tread0/data023
+/home/Dima/processed/tread0/data024
+/home/Dima/processed/tread0/data025
+/home/Dima/processed/tread0/data026
+/home/Dima/processed/tread0/data027
+/home/Dima/processed/tread0/data028
+/home/Dima/processed/tread0/data029
+/home/Dima/processed/tread0/data030
+/home/Dima/processed/tread0/data031
+/home/Dima/processed/tread0/data032
+/home/Dima/processed/tread0/data033
+/home/Dima/processed/tread0/data034
+/home/Dima/processed/tread1/data035
+/home/Dima/processed/tread1/data036
+/home/Dima/processed/tread1/data037
+/home/Dima/processed/tread1/data038
+/home/Dima/processed/tread1/data039
+/home/Dima/processed/tread1/data040
+/home/Dima/processed/tread1/data041
+/home/Dima/processed/tread1/data042
+/home/Dima/processed/tread1/data043
+/home/Dima/processed/tread1/data044
+/home/Dima/processed/tread1/data045
+/home/Dima/processed/tread1/data046
+/home/Dima/processed/tread1/data047
+/home/Dima/processed/tread1/data048
+/home/Dima/processed/tread1/data049
+/home/Dima/processed/tread1/data050
+/home/Dima/processed/tread1/data051
+/home/Dima/processed/tread1/data052
+/home/Dima/processed/tread1/data053
+/home/Dima/processed/tread1/data054
+/home/Dima/processed/tread1/data055
+/home/Dima/processed/tread1/data056
+/home/Dima/processed/tread1/data057
+/home/Dima/processed/tread1/data058
+/home/Dima/processed/tread1/data059
+/home/Dima/processed/tread1/data060
+/home/Dima/processed/tread1/data061
+/home/Dima/processed/tread1/data062
+/home/Dima/processed/tread1/data063
+/home/Dima/processed/tread1/data064
+/home/Dima/processed/tread1/data065
+/home/Dima/processed/tread1/data066
+/home/Dima/processed/tread1/data067
+/home/Dima/processed/tread2/data068
+/home/Dima/processed/tread2/data069
+/home/Dima/processed/tread2/data070
+/home/Dima/processed/tread2/data071
+/home/Dima/processed/tread2/data072
+/home/Dima/processed/tread2/data073
+/home/Dima/processed/tread2/data074
+/home/Dima/processed/tread2/data075
+/home/Dima/processed/tread2/data076
+/home/Dima/processed/tread2/data077
+/home/Dima/processed/tread2/data078
+/home/Dima/processed/tread2/data079
+/home/Dima/processed/tread2/data080
+/home/Dima/processed/tread2/data081
+/home/Dima/processed/tread2/data082
+/home/Dima/processed/tread2/data083
+/home/Dima/processed/tread2/data084
+/home/Dima/processed/tread2/data085
+/home/Dima/processed/tread2/data086
+/home/Dima/processed/tread2/data087
+/home/Dima/processed/tread2/data088
+/home/Dima/processed/tread2/data089
+/home/Dima/processed/tread2/data090
+/home/Dima/processed/tread2/data091
+/home/Dima/processed/tread2/data092
+/home/Dima/processed/tread2/data093
+/home/Dima/processed/tread2/data094
+/home/Dima/processed/tread2/data095
+/home/Dima/processed/tread2/data096
+/home/Dima/processed/tread2/data097
+/home/Dima/processed/tread2/data098
+/home/Dima/processed/tread2/data099
+/home/Dima/processed/tread2/data100
+/home/Dima/new/data001
+/home/Dima/new/data002
+/home/Dima/new/data003
+/home/Dima/new/data004
+/home/Dima/new/data005
+/home/Dima/new/data006
+/home/Dima/new/data007
+/home/Dima/new/data008
+/home/Dima/new/data009
+/home/Dima/new/data010
+/home/Dima/new/data011
+/home/Dima/new/data012
+/home/Dima/new/data013
+/home/Dima/new/data014
+/home/Dima/new/data015
+/home/Dima/new/data016
+/home/Dima/new/data017
+/home/Dima/new/data018
+/home/Dima/new/data019
+/home/Dima/new/data020
+/home/Dima/new/data021
+/home/Dima/new/data022
+/home/Dima/new/data023
+/home/Dima/new/data024
+/home/Dima/new/data025
+/home/Dima/new/data026
+/home/Dima/new/data027
+/home/Dima/new/data028
+/home/Dima/new/data029
+/home/Dima/new/data030
+/home/Dima/new/data031
+/home/Dima/new/data032
+/home/Dima/new/data033
+/home/Dima/new/data034
+/home/Dima/new/data035
+/home/Dima/new/data036
+/home/Dima/new/data037
+/home/Dima/new/data038
+/home/Dima/new/data039
+/home/Dima/new/data040
+/home/Dima/new/data041
+/home/Dima/new/data042
+/home/Dima/new/data043
+/home/Dima/new/data044
+/home/Dima/new/data045
+/home/Dima/new/data046
+/home/Dima/new/data047
+/home/Dima/new/data048
+/home/Dima/new/data049
+/home/Dima/new/data050
+/home/Dima/new/data051
+/home/Dima/new/data052
+/home/Dima/new/data053
+/home/Dima/new/data054
+/home/Dima/new/data055
+/home/Dima/new/data056
+/home/Dima/new/data057
+/home/Dima/new/data058
+/home/Dima/new/data059
+/home/Dima/new/data060
+/home/Dima/new/data061
+/home/Dima/new/data062
+/home/Dima/new/data063
+/home/Dima/new/data064
+/home/Dima/new/data065
+/home/Dima/new/data066
+/home/Dima/new/data067
+/home/Dima/new/data068
+/home/Dima/new/data069
+/home/Dima/new/data070
+/home/Dima/new/data071
+/home/Dima/new/data072
+/home/Dima/new/data073
+/home/Dima/new/data074
+/home/Dima/new/data075
+/home/Dima/new/data076
+/home/Dima/new/data077
+/home/Dima/new/data078
+/home/Dima/new/data079
+/home/Dima/new/data080
+/home/Dima/new/data081
+/home/Dima/new/data082
+/home/Dima/new/data083
+/home/Dima/new/data084
+/home/Dima/new/data085
+/home/Dima/new/data086
+/home/Dima/new/data087
+/home/Dima/new/data088
+/home/Dima/new/data089
+/home/Dima/new/data090
+/home/Dima/new/data091
+/home/Dima/new/data092
+/home/Dima/new/data093
+/home/Dima/new/data094
+/home/Dima/new/data095
+/home/Dima/new/data096
+/home/Dima/new/data097
+/home/Dima/new/data098
+/home/Dima/new/data099
+/home/Dima/new/data100
 
-[Dima@test ~]$ rm -f /home/Dima/new/*
+
+[Dima@test processed]$ cd ~
 [Dima@test ~]$ cd new
 [Dima@test new]$ ls -a
 .  ..
