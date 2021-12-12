@@ -19,7 +19,7 @@ Mar/2021 - 2 reqs
 Jun/2021 - 3 reqs
 
 Ex.3.1
-[Dima@test ~]$ awk '{arr[$1]=arr[$1]+$10}END{for(ipb in arr) print arr[ipb] " bytes for " ipb}' /home/Dima/access.log | tail -10
+[Dima@test ~]$ awk '{arr[$1]+=$10}END{for(ipb in arr) print arr[ipb] " bytes for " ipb}' /home/Dima/access.log | tail -10
 75163 bytes for 157.55.39.145
 11863 bytes for 213.226.113.93
 11863 bytes for 5.183.60.18
@@ -50,27 +50,14 @@ Ex.2.1
 Вывод первых десяти строк.
 
 Ex.2.2
-[Dima@test ~]$ awk '{for(i=1;i<=k;i++){if($1==arr[i]){$1=i;t=1}}; if(t==0){k=k+1;arr[k]=$1;$1=k}; t=0; print "ip" $0}' access.log > access.log.task
+sed 's/^[0-9.0-9]*/ip 000.000.000.000/' access.log > access.log.task 
 [Dima@test ~]$ cat access.log.task
-ip1278 - - [07/Jan/2021:02:41:21 +0100] "GET /apache-log/access.log HTTP/1.1" 304 - "https://www.google.com/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36" "-"
-ip1278 - - [07/Jan/2021:02:42:10 +0100] "GET /apache-log/access.log HTTP/1.1" 200 7516400 "https://www.google.com/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36" "-"
-ip964 - - [07/Jan/2021:02:45:07 +0100] "GET / HTTP/1.1" 200 10479 "http://www.almhuette-raith.at" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/[WEBKIT_VERSION] (KHTML, like Gecko, Mediapartners-Google) Chrome/[CHROME_VERSION] Safari/[WEBKIT_VERSION]" "-"
-ip964 - - [07/Jan/2021:02:45:09 +0100] "GET /index.php?option=com_easyblog&view=dashboard&layout=write HTTP/1.1" 404 1397 "http://www.almhuette-raith.at" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_3) AppleWebKit/[WEBKIT_VERSION] (KHTML, like Gecko, Mediapartners-Google) Chrome/[CHROME_VERSION] Safari/[WEBKIT_VERSION]" "-"
-ip4 - - [07/Jan/2021:02:46:53 +0100] "GET /index.php?option=com_content&view=article&id=46&Itemid=54 HTTP/1.1" 200 8938 "-" "Mozilla/5.0 (compatible; DotBot/1.1; http://www.opensiteexplorer.org/dotbot, help@moz.com)" "-"
-ip1279 - - [07/Jan/2021:03:05:14 +0100] "GET /apache-log/access.log HTTP/1.1" 200 12827802 "-" "curl/7.58.0" "-"
-ip1279 - - [07/Jan/2021:03:05:45 +0100] "GET /apache-log/access.log HTTP/1.1" 200 12827923 "-" "curl/7.58.0" "-"
-ip1280 - - [07/Jan/2021:03:46:35 +0100] "GET / HTTP/1.0" 200 10466 "http://www.almhuette-raith.at" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3451.0 Safari/537.36" "-"
-ip1280 - - [07/Jan/2021:03:46:43 +0100] "GET /index.php?option=com_easyblog&view=dashboard&layout=write HTTP/1.1" 404 1397 "http://www.almhuette-raith.at" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3451.0 Safari/537.36" "-"
-ip1279 - - [07/Jan/2021:03:47:48 +0100] "GET /apache-log/access.log HTTP/1.1" 200 12828562 "-" "curl/7.58.0" "-"
-ip1279 - - [07/Jan/2021:03:47:58 +0100] "GET /apache-log/access.log HTTP/1.1" 200 12828683 "-" "curl/7.58.0" "-"
-ip443 - - [07/Jan/2021:03:50:35 +0100] "GET / HTTP/1.0" 200 10466 "http://www.almhuette-raith.at" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36 Edge/2F3EA5A0" "-"
-ip730 - - [07/Jan/2021:04:07:25 +0100] "GET / HTTP/1.0" 200 10426 "http://almhuette-raith.at/" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36 OPR/49.0.2725.47" "-"
-ip730 - - [07/Jan/2021:04:07:25 +0100] "GET /index.php?option=com_users&view=registration HTTP/1.0" 404 1385 "http://almhuette-raith.at/index.php?option=com_users&view=registration" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36 OPR/49.0.2725.47" "-"
-ip730 - - [07/Jan/2021:04:07:25 +0100] "GET /index.php?option=com_users&view=registration HTTP/1.0" 404 1385 "http://almhuette-raith.at/index.php?option=com_users&view=registration" "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.89 Safari/537.36 OPR/49.0.2725.47" "-"
-ip1281 - - [07/Jan/2021:04:09:19 +0100] "GET / HTTP/1.1" 200 10439 "-" "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.90 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" "-"
-ip1231 - - [07/Jan/2021:04:14:50 +0100] "GET /apache-log/access.log HTTP/1.1" 200 12830214 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" "-"
-ip541 - - [07/Jan/2021:04:35:33 +0100] "GET /administrator/index.php HTTP/1.0" 200 4250 "-" "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)" "-"
-ip541 - - [07/Jan/2021:04:35:33 +0100] "POST /administrator/index.php HTTP/1.0" 200 4481 "-" "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.0)" "-"
+ip 000.000.000.000 - - [06/Jan/2021:00:11:23 +0100] "GET / HTTP/1.0" 200 10426 "https://downloadme.life/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36" "-"
+ip 000.000.000.000 - - [06/Jan/2021:00:18:09 +0100] "GET / HTTP/1.0" 200 10466 "http://www.almhuette-raith.at" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36" "-"
+ip 000.000.000.000 - - [06/Jan/2021:00:23:54 +0100] "GET /favicon.ico HTTP/1.1" 404 217 "http://www.almhuette-raith.at/apache-log/access.log" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" "-"
+ip 000.000.000.000 - - [06/Jan/2021:00:23:59 +0100] "GET /apache-log/access.log HTTP/1.1" 200 12345185 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" "-"
+ip 000.000.000.000 - - [06/Jan/2021:00:28:18 +0100] "GET / HTTP/1.0" 200 10466 "http://www.almhuette-raith.at" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134" "-"
+ip 000.000.000.000 - - [06/Jan/2021:00:33:44 +0100] "GET / HTTP/1.1" 200 10479 "-" "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)" "-"
 
 Коментарий:
 Произвольный выбор строк.
