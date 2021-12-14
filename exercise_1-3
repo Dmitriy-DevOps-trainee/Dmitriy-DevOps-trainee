@@ -18,17 +18,19 @@ Changing password for user eve.
 New password:
 
 Все новые аккаунты должны обязательно менять свои пароли каждый 30 дней.
-[Dima@test etc]$ sudo chage -m 30 -M 30 bob
-[Dima@test etc]$ sudo chage -m 30 -M alice
-[Dima@test etc]$ sudo chage -m 30 -M eve
-[Dima@test etc]$ sudo chage -l eve
-Last password change                                    : Dec 12, 2021
-Password expires                                        : Jan 11, 2022
+[Dima@test ~]$  sudo vim /etc/login.defs
+PASS_MAX_DAYS   30
+[Dima@test ~]$ sudo adduser tester
+[Dima@test ~]$ sudo chage -l tester
+Last password change                                    : Dec 14, 2021
+Password expires                                        : Jan 13, 2022
 Password inactive                                       : never
-Account expires                                         : Mar 12, 2022
-Minimum number of days between password change          : 30
-Maximum number of days between password change          : 30
+Account expires                                         : never
+Minimum number of days between password change          : 0
+Maximum number of days between password change          : 30                 # создал пользователя tester для проверки 
 Number of days of warning before password expires       : 7
+
+
 
 Новые аккаунты группы sales должны истечь по окончанию 90 дней срока
 [Dima@test etc]$ date -d "+90 days" +%F
@@ -88,20 +90,23 @@ Task 2: Controlling access to files with Linux file system permissions
 [Dima@test etc]$ sudo useradd lesly -G students
 
 У вас должна быть директория /home/students, где эти три пользователя могут работать совместно с файлами.
-[Dima@test ~]$ mkdir students
+[Dima@test home]$ mkdir students
+[Dima@test home]$ cd students
+[Dima@test students]$ pwd
+/home/students
 
 Должен быть возможен только пользовательский и групповой доступ, создание и удаление файлов в /home/students. 
-[Dima@test ~]$ chmod u=rwx,g=rwx,o=--- /home/Dima/students 
-drwxrwx---. 2 Dima students         6 Dec 12 17:23 students
+[Dima@test home]$ chmod u=rwx,g=rwx,o=--- /home/students 
+drwxrws---.  2 Dima     students   18 Dec 14 23:13 students
 
 Файлы, созданные в этой директории, должны автоматически присваиваться группе студентов students.
-[Dima@test ~]$  sudo chgrp students /home/Dima/students
-[Dima@test ~]$ sudo chmod g+s students
+[Dima@test home]$ sudo chgrp students /home/students
+[Dima@test home]$ sudo chmod g+s students
 ...
--rw-rw-r--. 1 Dima   students 0 Dec 13 23:48 test
--rw-rw-r--. 1 glen   students 0 Dec 13 23:50 test2
--rw-rw-r--. 1 antony students 0 Dec 13 23:50 test3
--rw-rw-r--. 1 lesly  students 0 Dec 13 23:51 test4
+-rw-rw-r--. 1 Dima students 0 Dec 14 23:13 test
+-rw-rw-r--. 1 glen   students 0 Dec 14 23:18 test2
+-rw-rw-r--. 1 antony students 0 Dec 14 23:18 test4
+-rw-rw-r--. 1 lesly  students 0 Dec 14 23:18 test5
 
 
 Task3: ACL
