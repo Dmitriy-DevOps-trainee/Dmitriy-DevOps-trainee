@@ -35,7 +35,7 @@ Ex.3.1
 Вывод последних десяти строк.
 
 Ex.2.1
-[Dima@test ~]$ sed 's/\(.*\)".*"\( "-"\)/\1"lynx"\2/' access.log | head -10
+[Dima@test ~]$ sed 's/\(.*\)".*"\( ".\"\)/\1"lynx"\2/' access.log | head -10     # Заменил на подстановку любого выражения в конце строки.
 13.66.139.0 - - [19/Dec/2020:13:57:26 +0100] "GET /index.php?option=com_phocagallery&view=category&id=1:almhuette-raith&Itemid=53 HTTP/1.1" 200 32653 "-" "lynx" "-"
 157.48.153.185 - - [19/Dec/2020:14:08:06 +0100] "GET /apache-log/access.log HTTP/1.1" 200 233 "-" "lynx" "-"
 157.48.153.185 - - [19/Dec/2020:14:08:08 +0100] "GET /favicon.ico HTTP/1.1" 404 217 "http://www.almhuette-raith.at/apache-log/access.log" "lynx" "-"
@@ -50,7 +50,15 @@ Ex.2.1
 Вывод первых десяти строк.
 
 Ex.2.2
-sed -r 's/([0-9]+.){4}/ip 000.000.000.000 /' access.log > access.log.task
+[Dima@test ~]$ sed -r 's/([0-9]+\.){3}[0-9]+/ip 000.000.000.000 /g' access.log > access.log.task         # Вариант 1.
+[Dima@test ~]$ cat access.log.task
+ip 000.000.000.000 - - [06/Jan/2021:00:11:23 +0100] "GET / HTTP/1.0" 200 10426 "https://downloadme.life/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36" "-"
+ip 000.000.000.000 - - [06/Jan/2021:00:18:09 +0100] "GET / HTTP/1.0" 200 10466 "http://www.almhuette-raith.at" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36" "-"
+ip 000.000.000.000 - - [06/Jan/2021:00:23:54 +0100] "GET /favicon.ico HTTP/1.1" 404 217 "http://www.almhuette-raith.at/apache-log/access.log" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" "-"
+ip 000.000.000.000 - - [06/Jan/2021:00:23:59 +0100] "GET /apache-log/access.log HTTP/1.1" 200 12345185 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" "-"
+ip 000.000.000.000 - - [06/Jan/2021:00:28:18 +0100] "GET / HTTP/1.0" 200 10466 "http://www.almhuette-raith.at" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134" "-"
+ip 000.000.000.000 - - [06/Jan/2021:00:33:44 +0100] "GET / HTTP/1.1" 200 10479 "-" "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)" "-"
+[Dima@test ~]$ sed -r 's/^([0-9]+.){4}/ip 000.000.000.000 /g' access.log > access.log.task              # Вариант 2. Якорь в начале строки.
 [Dima@test ~]$ cat access.log.task
 ip 000.000.000.000 - - [06/Jan/2021:00:11:23 +0100] "GET / HTTP/1.0" 200 10426 "https://downloadme.life/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36" "-"
 ip 000.000.000.000 - - [06/Jan/2021:00:18:09 +0100] "GET / HTTP/1.0" 200 10466 "http://www.almhuette-raith.at" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.62 Safari/537.36" "-"
