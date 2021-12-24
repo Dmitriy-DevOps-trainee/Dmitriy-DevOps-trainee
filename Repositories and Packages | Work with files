@@ -1,0 +1,348 @@
+Repositories and Packages
+
+
+- Use rpm for the following tasks:
+
+1. Download sysstat package.
+[Dima@test ~]$ wget http://mirror.centos.org/centos/7/os/x86_64/Packages/sysstat-10.1.5-19.el7.x86_64.rpm
+
+2. Get information from downloaded sysstat package file.
+[Dima@test rpm]$ sudo rpm -q sysstat
+sysstat-10.1.5-19.el7.x86_64
+
+3. Install sysstat package and get information about files installed by this package.
+[Dima@test ~]$ sudo rpm -ivh sysstat-10.1.5-19.el7.x86_64.rpm
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:sysstat-10.1.5-19.el7            ################################# [100%]
+
+
+- Add NGINX repository (need to find repository config on https://www.nginx.com/) and complete the following tasks using yum:
+
+1. Check if NGINX repository enabled or not.
+[Dima@test ~]$ cd /etc/yum.repos.d
+[Dima@test yum.repos.d]$ sudo nano nginx.repo
+[nginx]
+name=nginx repo
+baseurl=https://nginx.org/packages/centos/$releasever/$basearch/
+gpgcheck=0
+enabled=1
+
+2. Install NGINX.
+[Dima@test local]$ sudo yum install nginx
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: centos-mirror.rbc.ru
+ * epel: ftp.lysator.liu.se
+ * extras: mirror.yandex.ru
+ * updates: centos-mirror.rbc.ru
+Package 1:nginx-1.20.2-1.el7.ngx.x86_64 already installed and latest version
+Nothing to do
+
+3. Check yum history and undo NGINX installation.
+[Dima@test ~]$ sudo yum history list nginx
+Loaded plugins: fastestmirror, langpacks
+ID     | Command line             | Date and time    | Action(s)      | Altered
+-------------------------------------------------------------------------------
+     9 | install nginx            | 2021-12-24 06:45 | Update         |    1
+     8 | install nginx            | 2021-12-24 06:34 | Install        |    3
+history list
+
+[Dima@test ~]$ sudo yum remove nginx
+Loaded plugins: fastestmirror, langpacks
+Resolving Dependencies
+--> Running transaction check
+---> Package nginx.x86_64 1:1.20.2-1.el7.ngx will be erased
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package       Arch           Version                      Repository      Size
+================================================================================
+Removing:
+ nginx         x86_64         1:1.20.2-1.el7.ngx           @nginx         2.8 M
+
+Transaction Summary
+================================================================================
+Remove  1 Package
+
+Installed size: 2.8 M
+Is this ok [y/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Erasing    : 1:nginx-1.20.2-1.el7.ngx.x86_64                              1/1
+  Verifying  : 1:nginx-1.20.2-1.el7.ngx.x86_64                              1/1
+
+Removed:
+  nginx.x86_64 1:1.20.2-1.el7.ngx
+
+Complete!
+
+4. Disable NGINX repository.
+[Dima@test ~]$ cd /etc/yum.repos.d
+[Dima@test yum.repos.d]$ sudo nano nginx.repo
+[nginx]
+name=nginx repo
+baseurl=https://nginx.org/packages/centos/$releasever/$basearch/
+gpgcheck=0
+enabled=0
+
+5. Remove sysstat package installed in the first task.
+[Dima@test ~]$ sudo yum remove sysstat
+Loaded plugins: fastestmirror, langpacks
+Resolving Dependencies
+--> Running transaction check
+---> Package sysstat.x86_64 0:10.1.5-19.el7 will be erased
+--> Finished Dependency Resolution
+nginx/7/x86_64                                           | 2.9 kB     00:00
+
+Dependencies Resolved
+
+================================================================================
+ Package          Arch            Version                  Repository      Size
+================================================================================
+Removing:
+ sysstat          x86_64          10.1.5-19.el7            @base          1.1 M
+
+Transaction Summary
+================================================================================
+Remove  1 Package
+
+Installed size: 1.1 M
+Is this ok [y/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Erasing    : sysstat-10.1.5-19.el7.x86_64                                 1/1
+  Verifying  : sysstat-10.1.5-19.el7.x86_64                                 1/1
+
+Removed:
+  sysstat.x86_64 0:10.1.5-19.el7
+
+Complete!
+
+6. Install EPEL repository and get information about it.
+[Dima@test ~]$ sudo yum install epel-release
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: centos-mirror.rbc.ru
+ * epel: www.nic.funet.fi
+ * extras: mirror.corbina.net
+ * updates: centos-mirror.rbc.ru
+Resolving Dependencies
+--> Running transaction check
+---> Package epel-release.noarch 0:7-11 will be updated
+---> Package epel-release.noarch 0:7-14 will be an update
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package                Arch             Version           Repository      Size
+================================================================================
+Updating:
+ epel-release           noarch           7-14              epel            15 k
+
+Transaction Summary
+================================================================================
+Upgrade  1 Package
+
+Total download size: 15 k
+Is this ok [y/d/N]: y
+Downloading packages:
+Delta RPMs disabled because /usr/bin/applydeltarpm not installed.
+epel-release-7-14.noarch.rpm                               |  15 kB   00:00
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Updating   : epel-release-7-14.noarch                                     1/2
+  Cleanup    : epel-release-7-11.noarch                                     2/2
+  Verifying  : epel-release-7-14.noarch                                     1/2
+  Verifying  : epel-release-7-11.noarch                                     2/2
+
+Updated:
+  epel-release.noarch 0:7-14
+
+Complete!
+
+[Dima@test ~]$ yum info epel-release
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: mirror.logol.ru
+ * epel: www.nic.funet.fi
+ * extras: mirrors.datahouse.ru
+ * updates: mirrors.datahouse.ru
+Installed Packages
+Name        : epel-release
+Arch        : noarch
+Version     : 7
+Release     : 14
+Size        : 25 k
+Repo        : installed
+From repo   : epel
+Summary     : Extra Packages for Enterprise Linux repository configuration
+URL         : http://download.fedoraproject.org/pub/epel
+License     : GPLv2
+Description : This package contains the Extra Packages for Enterprise Linux
+            : (EPEL) repository GPG key as well as configuration for yum.
+
+7. Find how much packages provided exactly by EPEL repository.
+[Dima@test ~]$ sudo yum --disablerepo "*" --enablerepo epel list available | less                                                                                                             s
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * epel: ftp.lysator.liu.se
+Available Packages
+0ad.x86_64                                  0.0.22-1.el7                    epel
+0ad-data.noarch                             0.0.22-1.el7                    epel
+0install.x86_64                             2.11-1.el7                      epel
+2048-cli.x86_64                             0.9.1-1.el7                     epel
+2048-cli-nocurses.x86_64                    0.9.1-1.el7                     epel
+2ping.noarch                                3.2.1-2.el7                     epel
+389-admin.x86_64                            1.1.46-4.el7                    epel
+389-admin-console.noarch                    1.1.12-1.el7                    epel
+389-admin-console-doc.noarch                1.1.12-1.el7                    epel
+389-adminutil.x86_64                        1.1.22-2.el7                    epel
+389-adminutil-devel.x86_64                  1.1.22-2.el7                    epel
+389-console.noarch                          1.1.19-6.el7                    epel
+389-ds.noarch                               1.2.2-6.el7                     epel
+389-ds-console.noarch                       1.2.16-1.el7                    epel
+389-ds-console-doc.noarch                   1.2.16-1.el7                    epel
+389-dsgw.x86_64                             1.1.11-5.el7                    epel
+3proxy.x86_64                               0.7-1.el7                       epel
+3proxy-sysvinit.x86_64                      0.7-1.el7                       epel
+4diac-forte.x86_64                          1.9.0-0.1.M3.el7                epel
+90-Second-Portraits.noarch                  1.01b-3.el7                     epel
+Agda.x86_64                                 2.3.2.2-5.el7                   epel
+AntTweakBar.x86_64                          1.16-2.el7                      epel
+AntTweakBar-devel.x86_64                    1.16-2.el7                      epel
+AusweisApp2.x86_64                          1.14.3-2.el7                    epel
+AusweisApp2-data.noarch                     1.14.3-2.el7                    epel
+AusweisApp2-doc.noarch                      1.14.3-2.el7                    epel
+BEDTools.x86_64                             2.26.0-1.el7                    epel
+BackupPC.x86_64                             3.3.1-5.el7                     epel
+BackupPC-XS.x86_64                          0.59-1.el7                      epel
+BareBonesBrowserLaunch.noarch               3.1-7.el7                       epel
+BareBonesBrowserLaunch-javadoc.noarch       3.1-7.el7                       epel
+BibTool.x86_64                              2.63-1.el7                      epel
+CBFlib.x86_64                               0.9.5.1-1.el7                   epel
+CBFlib-devel.x86_64                         0.9.5.1-1.el7                   epel
+CCfits.x86_64                               2.5-13.el7                      epel
+CCfits-devel.x86_64                         2.5-13.el7                      epel
+CCfits-doc.noarch                           2.5-13.el7                      epel
+CFR.noarch                                  0.151-4.el7                     epel
+CFR-javadoc.noarch                          0.151-4.el7                     epel
+CGSI-gSOAP.x86_64                           1.3.11-1.el7                    epel
+CGSI-gSOAP-devel.x86_64                     1.3.11-1.el7                    epel
+CUnit.x86_64                                2.1.3-8.el7                     epel
+CUnit-devel.x86_64                          2.1.3-8.el7                     epel
+Canna.x86_64                                3.7p3-43.el7                    epel
+Canna-devel.x86_64                          3.7p3-43.el7                    epel
+
+8. Install ncdu package from EPEL repo.
+[Dima@test ~]$ yum install ncdu
+Loaded plugins: fastestmirror, langpacks
+You need to be root to perform this command.
+[Dima@test ~]$ sudo yum install ncdu
+[sudo] password for Dima:
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: centos-mirror.rbc.ru
+ * epel: mirror.yandex.ru
+ * extras: mirror.yandex.ru
+ * updates: centos-mirror.rbc.ru
+Resolving Dependencies
+--> Running transaction check
+---> Package ncdu.x86_64 0:1.16-1.el7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package         Arch              Version                Repository       Size
+================================================================================
+Installing:
+ ncdu            x86_64            1.16-1.el7             epel             53 k
+
+Transaction Summary
+================================================================================
+Install  1 Package
+
+Total download size: 53 k
+Installed size: 89 k
+Is this ok [y/d/N]: y
+Downloading packages:
+ncdu-1.16-1.el7.x86_64.rpm                                 |  53 kB   00:00
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : ncdu-1.16-1.el7.x86_64                                       1/1
+  Verifying  : ncdu-1.16-1.el7.x86_64                                       1/1
+
+Installed:
+  ncdu.x86_64 0:1.16-1.el7
+
+Complete!
+
+
+Work with files
+
+
+1. Find all regular files below 100 bytes inside your home directory.
+[Dima@test ~]$ find . -type f -size +0c -size -100c
+./.bash_logout
+./.cache/abrt/lastnotification
+./.lesshst
+./directory.txt
+./task3.sh
+./.ssh/config
+
+2. Find an inode number and a hard links count for the root directory. The hard link count should be about 17. Why?
+[Dima@test ~]$ find / -type f -links +1
+[Dima@test ~]$ ls -i
+
+
+3. Check what inode numbers have "/" and "/boot" directory. Why?
+[Dima@test /]$ ls -i -a /
+      64 .      4194369 etc          83 mnt        125 sbin        8435958 usr
+      64 ..     8435996 home    4195292 opt    8435997 srv        12582977 var
+     120 bin        124 lib           1 proc         1 sys
+      64 boot        82 lib64   8409153 root     80392 task2.txt
+       3 dev   12583333 media      7177 run    4194376 tmp
+
+# Одинаковое количество inode может быть в разных каталогах при условии, что они в одной файловой системе и относятся к одному и тому же файлу. 
+Каждый индексный дескриптор имеет счетчик, который записывает количество ссылок (то есть записей каталога), которые ссылаются на него.
+
+4. Check the root directory space usage by du command. Compare it with an information from df. If you find differences, try to find out why it happens.
+[root@test ~]# du
+4       ./.cache/abrt
+4       ./.cache
+0       ./.config/abrt
+0       ./.config
+8       ./share/cases
+8       ./share
+0       ./.pki/nssdb
+0       ./.pki
+44      .
+[root@test ~]# df
+Filesystem                   1K-blocks    Used Available Use% Mounted on
+devtmpfs                        495644       0    495644   0% /dev
+tmpfs                           507376       0    507376   0% /dev/shm
+tmpfs                           507376    6972    500404   2% /run
+tmpfs                           507376       0    507376   0% /sys/fs/cgroup
+/dev/mapper/centos_test-root   6486016 2360312   4125704  37% /
+/dev/sda1                      1038336  141116    897220  14% /boot
+tmpfs                           101476       0    101476   0% /run/user/1000
+
+# Отличие заключается в том, что du – выполняет запрос к каждому найденному файлу в разделе и суммирует дисковое пространство для каждого файла, а df – выполняет запрос 
+к файловой системе и отображает количество доступного дискового пространства. 
+
+5. Check disk space usage of /var/log directory using ncdu
+[Dima@test /]$ ncdu /var/log
