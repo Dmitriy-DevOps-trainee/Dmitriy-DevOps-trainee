@@ -1,0 +1,171 @@
+1. Imagine you was asked to add new partition to your host for backup purposes. To simulate appearance of new physical disk in your server, please create new disk in Virtual Box (5 GB) and attach it to your virtual machine.
+Also imagine your system started experiencing RAM leak in one of the applications, thus while developers try to debug and fix it, you need to mitigate OutOfMemory errors; you will do it by adding some swap space.
+/dev/sdc - 5GB disk, that you just attached to the VM (in your case it may appear as /dev/sdb, /dev/sdc or other, it doesn't matter)
+
+1.1. Create a 2GB   !!! GPT !!!   partition on /dev/sdc of type "Linux filesystem" (means all the following partitions created in the following steps on /dev/sdc will be GPT as well)
+[Dima@test ~]$ sudo gdisk /dev/sdb
+...
+
+Disk /dev/sdb: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: gpt
+Disk identifier: 224F3D63-326F-4B6B-AA4E-E23E64888A01
+
+#         Start          End    Size  Type            Name
+ 1         2048      4196351      2G  Linux filesyste Linux filesystem
+
+
+1.2. Create a 512MB partition on /dev/sdc of type "Linux swap"
+[Dima@test ~]$ sudo gdisk /dev/sdb
+...
+
+Disk /dev/sdb: 536.9 GB, 536870912000 bytes, 1048576000 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: gpt
+Disk identifier: 224F3D63-326F-4B6B-AA4E-E23E64888A01
+
+#         Start          End    Size  Type            Name
+ 1         2048      4196351      2G  Linux filesyste Linux filesystem
+ 2      4196352      5244927    512M  Linux swap      Linux swap
+
+
+1.3. Format the 2GB partition with an XFS file system
+[Dima@test ~]$ sudo mkfs.xfs -f /dev/sdb1
+meta-data=/dev/sdb1              isize=512    agcount=4, agsize=131072 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=0, sparse=0
+data     =                       bsize=4096   blocks=524288, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+
+1.4. Initialize 512MB partition as swap space
+[Dima@test ~]$ sudo mkswap /dev/sdb2
+Setting up swapspace version 1, size = 524284 KiB
+no label, UUID=1dcd623d-ac20-44c3-bb46-c527be04a0ea
+
+
+1.5. Configure the newly created XFS file system to persistently mount at /backup
+[Dima@test /]$ sudo mount -t xfs /dev/sdb1 /backup
+mount: /dev/sdb1 is already mounted on /backup
+[Dima@test /]$ df -Th /backup
+Filesystem     Type  Size  Used Avail Use% Mounted on
+/dev/sdb1      xfs   2.0G   33M  2.0G   2% /backup
+
+
+1.6. Configure the newly created swap space to be enabled at boot
+[Dima@test ~]$ sudo nano /etc/fstab
+
+#
+# /etc/fstab
+# Created by anaconda on Sat Nov 27 23:07:04 2021
+#
+# Accessible filesystems, by reference, are maintained under '/dev/disk'
+# See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+#
+/dev/mapper/centos_test-root /                       xfs     defaults        0 0
+UUID=3b530d17-9091-4832-a964-e6a0df34febc /boot      xfs     defaults        0 0
+UUID=1dcd623d-ac20-44c3-bb46-c527be04a0ea swap       swap    defaults        0 0        # New line
+
+[Dima@test ~]$ sudo swapon -a
+[Dima@test ~]$ sudo swapon -s
+Filename                                Type            Size    Used    Priority
+/dev/dm-1                               partition       839676  0       -2
+/dev/sdb2                               partition       524284  0       -3
+
+
+1.7. Reboot your host and verify that /dev/sdc1 is mounted at /backup and that your swap partition  (/dev/sdc2) is enabled
+[Dima@test /]$ sudo reboot
+[Dima@test /]$ df
+Filesystem                   1K-blocks    Used Available Use% Mounted on
+devtmpfs                        495644       0    495644   0% /dev
+tmpfs                           507376       0    507376   0% /dev/shm
+tmpfs                           507376    6984    500392   2% /run
+tmpfs                           507376       0    507376   0% /sys/fs/cgroup
+/dev/mapper/centos_test-root   6486016 2508912   3977104  39% /
+/dev/sdb1                      2086912   32992   2053920   2% /backup
+/dev/sda1                      1038336  141116    897220  14% /boot
+tmpfs                           101476       0    101476   0% /run/user/1000
+
+[Dima@test /]$ swapon -s
+Filename                                Type            Size    Used    Priority
+/dev/sdb2                               partition       524284  0       -2
+
+
+
+2. LVM. Imagine you're running out of space on your root device. As we found out during the lesson default CentOS installation should already have LVM, 
+means you can easily extend size of your root device. So what are you waiting for? Just do it!
+
+2.1. Create 2GB partition on /dev/sdc of type "Linux LVM"
+[Dima@test ~]$ sudo gdisk /dev/sdc
+...
+
+Disk /dev/sdc: 107.4 GB, 107374182400 bytes, 209715200 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: gpt
+Disk identifier: CF313853-3D5B-4F7E-9318-06DCE05E3743
+
+#         Start          End    Size  Type            Name
+ 1         2048      4196351      2G  Linux LVM       Linux LVM
+
+
+2.2. Initialize the partition as a physical volume (PV)
+[Dima@test ~]$ sudo pvcreate /dev/sdc1
+  Physical volume "/dev/sdc1" successfully created.
+
+2.3. Extend the volume group (VG) of your root device using your newly created PV
+[Dima@test ~]$ sudo vgextend centos_test /dev/sdc2
+  Volume group "centos_test" successfully extended
+
+
+2.4. Extend your root logical volume (LV) by 1GB, leaving other 1GB unassigned
+[Dima@test ~]$ sudo lvextend -L+1G /dev/centos_test/root
+  Size of logical volume centos_test/root changed from <6.20 GiB (1586 extents) to <7.20 GiB (1842 extents).
+  Logical volume centos_test/root successfully resized.
+
+
+2.5. Check current disk space usage of your root device
+[Dima@test ~]$ sudo df -h
+Filesystem                    Size  Used Avail Use% Mounted on
+devtmpfs                      485M     0  485M   0% /dev
+tmpfs                         496M     0  496M   0% /dev/shm
+tmpfs                         496M  6.9M  489M   2% /run
+tmpfs                         496M     0  496M   0% /sys/fs/cgroup
+/dev/mapper/centos_test-root  6.2G  2.4G  3.8G  39% /
+/dev/sda1                    1014M  138M  877M  14% /boot
+tmpfs                         100M     0  100M   0% /run/user/1000
+
+
+2.6. Extend your root device filesystem to be able to use additional free space of root LV
+[Dima@test ~]$ sudo xfs_growfs /dev/mapper/centos_test-root
+[Dima@test ~]$ df -h
+Filesystem                    Size  Used Avail Use% Mounted on
+devtmpfs                      485M     0  485M   0% /dev
+tmpfs                         496M     0  496M   0% /dev/shm
+tmpfs                         496M  6.9M  489M   2% /run
+tmpfs                         496M     0  496M   0% /sys/fs/cgroup
+/dev/mapper/centos_test-root  7.2G  2.4G  4.8G  34% /
+/dev/sda1                    1014M  138M  877M  14% /boot
+tmpfs                         100M     0  100M   0% /run/user/1000
+
+
+2.7. Verify that after reboot your root device is still 1GB bigger than at 2.5.
+[Dima@test ~]$ df -h
+Filesystem                    Size  Used Avail Use% Mounted on
+devtmpfs                      485M     0  485M   0% /dev
+tmpfs                         496M     0  496M   0% /dev/shm
+tmpfs                         496M  6.9M  489M   2% /run
+tmpfs                         496M     0  496M   0% /sys/fs/cgroup
+/dev/mapper/centos_test-root  7.2G  2.4G  4.8G  34% /
+/dev/sda1                    1014M  138M  877M  14% /boot
+tmpfs                         100M     0  100M   0% /run/user/0
+tmpfs                         100M     0  100M   0% /run/user/1000
