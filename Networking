@@ -1,0 +1,189 @@
+1. add secondary ip address to you second network interface enp0s8. Each point must be presented with commands and showing that new address was applied to the interface. 
+To repeat adding address for points 2 and 3 address must be deleted (please add deleting address to you homework log) Methods:
+   
+1. using ip utility (stateless)
+[Dima@test ~]$ ip add show dev enp0s8
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 456sec preferred_lft 456sec
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+[Dima@test ~]$ sudo ip address add 192.168.56.202 dev enp0s8
+RTNETLINK answers: File exists
+Result:
+[Dima@test ~]$ ip add show dev enp0s8
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 352sec preferred_lft 352sec
+    inet 192.168.56.202/32 scope global enp0s8
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+[Dima@test ~]$ sudo ip address del 192.168.56.202 dev enp0s8
+Warning: Executing wildcard deletion to stay compatible with old scripts.
+         Explicitly specify the prefix length (192.168.56.202/32) to avoid this warning.
+         This special behaviour is likely to disappear in further releases,
+         fix your scripts!
+Result:
+[Dima@test ~]$ ip add show dev enp0s8
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 479sec preferred_lft 479sec
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+
+2. using centos network configuration file (statefull)	# In this exercize I'm created "ifcfg-enp0s8", because this file did not exist (we are talked about this problem in Slack).
+[Dima@test ~]$ ip add show dev enp0s8
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 479sec preferred_lft 479sec
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+[Dima@test ~]$ cd /etc/sysconfig/network-scripts/
+[Dima@test network-scripts]$ sudo touch ifcfg-enp0s8
+[Dima@test network-scripts]$ sudo nano ifcfg-enp0s8
+DEVICE=enp0s8:1
+Type=Ethernet
+ONBOOT=yes
+NM_CONTROLLED=no
+BOOTPROTO=none
+IPADDR=192.168.56.202
+PREFIX=24
+
+[Dima@test ~]$ sudo service network restart
+
+Result:
+[Dima@test ~]$ ip ad
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 469sec preferred_lft 469sec
+    inet 192.168.56.202/24 brd 192.168.56.255 scope global secondary enp0s8:1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+
+3. using nmcli utility (statefull)
+[Dima@test ~]$ sudo nmcli dev mod enp0s8 +ipv4.addresses 192.168.56.202
+Connection successfully reapplied to device 'enp0s8'.
+
+Result:
+[Dima@test ~]$ ip ad
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 348sec preferred_lft 348sec
+    inet 192.168.56.202/32 brd 192.168.56.202 scope global noprefixroute enp0s8
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+[Dima@test ~]$ sudo nmcli dev mod enp0s8 -ipv4.addresses 192.168.56.202/32
+Connection successfully reapplied to device 'enp0s8'.
+
+Result:
+[Dima@test ~]$ ip ad
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 550sec preferred_lft 550sec
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+
+
+2. You should have a possibility to use ssh client to connect to your node using new address from previous step. Run tcpdump in separate tmux session or separate connection 
+before starting ssh client and capture packets that are related to this ssh connection. Find packets that are related to TCP session establish.
+
+[Dima@test ~]$ sudo tcpdump -i enp0s8 host 192.168.56.202
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on enp0s8, link-type EN10MB (Ethernet), capture size 262144 bytes
+
+# Open session 192.168.56.202...
+
+Result:
+20:36:26.533945 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [S], seq 470    #                                                                                                       870550, win 64240, options [mss 1460,nop,wscale 8,nop,nop,sackOK], length 0
+20:36:26.534030 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [S.], seq 17    #   Packets that are related to TCP session establish.                                                                                                      24002688, ack 470870551, win 29200, options [mss 1460,nop,nop,sackOK,nop,wscale                                                                                                              7], length 0
+20:36:26.534196 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [.], ack 1,     #                                                                                                         win 8212, length 0
+20:36:26.540075 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 1:                                                                                                             29, ack 1, win 8212, length 28
+20:36:26.540119 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [.], ack 29,                                                                                                              win 229, length 0
+20:36:26.550083 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 1:                                                                                                             22, ack 29, win 229, length 21
+20:36:26.552752 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 29                                                                                                             :1285, ack 22, win 8212, length 1256
+20:36:26.556587 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 22                                                                                                             :1302, ack 1285, win 251, length 1280
+20:36:26.558626 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 12                                                                                                             85:1333, ack 1302, win 8207, length 48
+20:36:26.565922 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 13                                                                                                             02:1606, ack 1333, win 251, length 304
+20:36:26.573765 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 13                                                                                                             33:1413, ack 1606, win 8212, length 80
+20:36:26.574707 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 16                                                                                                             06:1670, ack 1413, win 251, length 64
+20:36:26.615459 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [.], ack 167                                                                                                             0, win 8212, length 0
+
+13 packets captured
+14 packets received by filter
+0 packets dropped by kernel
+
+
+3. Close session. Find in tcpdump output packets that are related to TCP session closure.
+
+[Dima@test ~]$ sudo tcpdump -i enp0s8 host 192.168.56.202
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on enp0s8, link-type EN10MB (Ethernet), capture size 262144 bytes
+
+Close session 192.168.56.202...
+
+20:36:26.533945 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [S], seq 470                                                                                                             870550, win 64240, options [mss 1460,nop,wscale 8,nop,nop,sackOK], length 0
+20:36:26.534030 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [S.], seq 17                                                                                                             24002688, ack 470870551, win 29200, options [mss 1460,nop,nop,sackOK,nop,wscale                                                                                                              7], length 0
+20:36:26.534196 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [.], ack 1,                                                                                                              win 8212, length 0
+20:36:26.540075 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 1:                                                                                                             29, ack 1, win 8212, length 28
+20:36:26.540119 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [.], ack 29,                                                                                                              win 229, length 0
+20:36:26.550083 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 1:                                                                                                             22, ack 29, win 229, length 21
+20:36:26.552752 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 29                                                                                                             :1285, ack 22, win 8212, length 1256
+20:36:26.556587 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 22                                                                                                             :1302, ack 1285, win 251, length 1280
+20:36:26.558626 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 12                                                                                                             85:1333, ack 1302, win 8207, length 48
+20:36:26.565922 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 13                                                                                                             02:1606, ack 1333, win 251, length 304
+20:36:26.573765 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 13                                                                                                             33:1413, ack 1606, win 8212, length 80
+20:36:26.574707 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 16                                                                                                             06:1670, ack 1413, win 251, length 64
+20:36:26.615459 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [.], ack 167                                                                                                             0, win 8212, length 0
+20:36:37.669931 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [F.], seq 14    #                                                                                                         13, ack 1670, win 8212, length 0
+20:36:37.674218 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [F.], seq 16    #   Output packets that are related to TCP session closure.                                                                                                    70, ack 1414, win 251, length 0
+20:36:37.674800 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [.], ack 167    #                                                                                                        1, win 8212, length 0
+
+16 packets captured
+16 packets received by filter
+0 packets dropped by kernel
+
+
+4. run tcpdump and request any http site in separate session. Find HTTP request and answer packets with ASCII data in it.  Tcpdump command must be as strict as possible 
+to capture only needed packages for this http request.
+
+First window.
+[Dima@test ~]$ sudo tcpdump -A host yandex.ru
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on enp0s3, link-type EN10MB (Ethernet), capture size 262144 bytes
+
+Second window.
+[Dima@test ~]$ curl -s -I https://yandex.ru
+HTTP/1.1 200 Ok
+Accept-CH: Viewport-Width, DPR, Device-Memory, RTT, Downlink, ECT
+Accept-CH-Lifetime: 31536000
+Cache-Control: no-cache,no-store,max-age=0,must-revalidate
+... 
+
+First window.
+[Dima@test ~]$ sudo tcpdump -A host yandex.ru
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on enp0s3, link-type EN10MB (Ethernet), capture size 262144 bytes
+20:27:57.033595 IP test.localdomain.42924 > yandex.ru.https: Flags [S], seq 945993531, win 29200, options [mss 1460,sackOK,TS val 2329050 ecr 0,nop,wscale 7], length 0
+...
+29 packets captured
+33 packets received by filter
+0 packets dropped by kernel
+
+
