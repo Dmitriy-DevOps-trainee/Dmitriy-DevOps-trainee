@@ -186,4 +186,24 @@ listening on enp0s3, link-type EN10MB (Ethernet), capture size 262144 bytes
 33 packets received by filter
 0 packets dropped by kernel
 
+_______________________________
 
+First window.			# For more strict we can add ip address of the host, also we can add the option of display output in hexadecimal format
+[Dima@test ~]$
+sudo tcpdump -A -X -i -I enp0s8 host 192.168.56.202
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on enp0s8, link-type EN10MB (Ethernet), capture size 262144 bytes
+
+Second window.
+[Dima@test ~]$ curl -s -I https://yandex.ru
+
+First window.
+...
+15:06:34.557327 IP 192.168.56.1.51239 > test.localdomain.ssh: Flags [P.], seq 1574898639:1574898703, ack 3513332958, win 8211, length 64
+        0x0000:  4500 0068 bae8 4000 8006 4d8b c0a8 3801  E..h..@...M...8.
+        0x0010:  c0a8 38ca c827 0016 5ddf 0bcf d169 34de  ..8..'..]....i4.
+        0x0020:  5018 2013 f18d 0000 dd8a 0e0c 610b 43b7  P...........a.C.
+        0x0030:  235c 1a78 163b 1293 c17c 6c61 5055 3b91  #\.x.;...|laPU;.
+        0x0040:  7188 b1a4 16b5 ba69 e505 0322 5703 3af9  q......i..."W.:.
+        0x0050:  99e7 8d73 7526 01f4 5103 1666 e913 ff45  ...su&..Q..f...E
+        0x0060:  2898 9e33 5388 4bdd                      (..3S.K.
