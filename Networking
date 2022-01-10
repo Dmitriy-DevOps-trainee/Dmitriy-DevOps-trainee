@@ -164,46 +164,49 @@ Close session 192.168.56.202...
 to capture only needed packages for this http request.
 
 First window.
-[Dima@test ~]$ sudo tcpdump -A host yandex.ru
-tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
-listening on enp0s3, link-type EN10MB (Ethernet), capture size 262144 bytes
+[Dima@test ~]$ sudo tcpdump -A -c5 'host drive.ru and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'               # Command to capture HTTP data packets (Google's help). I also purposely limited the output of packages for the example.
 
 Second window.
-[Dima@test ~]$ curl -s -I https://yandex.ru
-HTTP/1.1 200 Ok
-Accept-CH: Viewport-Width, DPR, Device-Memory, RTT, Downlink, ECT
-Accept-CH-Lifetime: 31536000
-Cache-Control: no-cache,no-store,max-age=0,must-revalidate
-... 
+[Dima@test ~]$ curl -s -I https://drive.ru
 
 First window.
-[Dima@test ~]$ sudo tcpdump -A host yandex.ru
+[Dima@test ~]$ sudo tcpdump -A -c5 'host drive.ru and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'
 tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
 listening on enp0s3, link-type EN10MB (Ethernet), capture size 262144 bytes
-20:27:57.033595 IP test.localdomain.42924 > yandex.ru.https: Flags [S], seq 945993531, win 29200, options [mss 1460,sackOK,TS val 2329050 ecr 0,nop,wscale 7], length 0
-...
-29 packets captured
-33 packets received by filter
+14:33:30.354666 IP test.localdomain.52042 > 146.255.192.88.https: Flags [P.], seq 3407724014:3407724204, ack 1002688002, win 29200, length 190
+E...l.@.@.m.
+......X.J......;...P.r.`?.............,H........(..........._..Cj...1...8.,.
+.+...   .0.../.......9.8.k.....3.2.g.......5.=.../.<.
+...T.........drive.ru......
+.
+................... ....................................@.
+14:33:30.564257 IP 146.255.192.88.https > test.localdomain.52042: Flags [P.], seq 1:2690, ack 190, win 65535, length 2689
+E.
+.....@.
+(...X
+......J;.......P...j.......]...Y......GF.yV.H...n.1?e..|.......... .N$<-.....J..k.LP.u...ha.e.E]\g..+.......................    x..     t.      q..P0..L0.............hn.[0....&n.!0
+..*.H.=...0V1.0 ..U....US1.0...U.
+..DigiCert Inc100...U...'DigiCert TLS Hybrid ECC SHA384 2020 CA10...211011000000Z..221111235959Z0M1.0   ..U....RU1.0...U................1.0...U.
+.       DRIVE LLC1.0...U...
+*.drive.ru0Y0...*.H.=....*.H.=....B..l....s..&..}].5N.j..o...DT....B,.L.7.W.......t#..._.b...I..@._......0...0...U.#..0...
+..)...9mz..3......z0...U......em...,..r...\.f(|O;.0...U....0..
+*.drive.ru..drive.ru0...U...........0...U.%..0...+.........+.......0....U.....0..0F.D.B.@http://crl3.digicert.com/DigiCertTLSHybridECCSHA3842020CA1-1.crl0F.D.B.@http://crl4.digicert.com/DigiCertTLSHybridECCSHA3842020CA1-1.crl0>..U. .70503..g.....0)0'..+.........http://www.digicert.com/CPS0....+........y0w0$..+.....0...http://ocsp.digicert.com0O..+.....0..Chttp://cacerts.digicert.com/DigiCertTLSHybridECCSHA3842020CA1-1.crt0...U.......0.0..}.
++.....y......m...i.g.v.)y...99!.Vs.c.w..W}.`
+..M]&\%].....|o........G0E. }.......'/.N.N..K*j.!6.s...%.g...!..Q...2...t..{..oZ......Q7`. ...@.u.Q.....y.Vm.7x...z..'....B..........|o..o.....F0D. !..F."v.${.=..d...i%....dIMiy.... ^I...u........6-o..hl....;.V;.&..v.A...."FJ...:   B.^N1.....K.h..b......|o..1.....G0E. .Vg.&...@...QfG.0...?..5..z.}..v.!...u.V.J..`.8..4.r.8*..o.T....<c.0
+..*.H.=....h.0e.0....`N%5....x...Y..[.}..hO..>...^.. woM.xq.....W.1..V...NOf....x..j...H.>.H..n.)q.N9.}.vX.....?..:3...0...0.............\..w.z..G.5%.0..      *.H........0a1.0 ..U....US1.0...U.
+..DigiCert Inc1.0...U....www.digicert.com1 0...U....DigiCert Global Root CA0...210414000000Z..310413235959Z0V1.0        ..U....US1.0...U.
+..DigiCert Inc100...U...'DigiCert TLS Hybrid ECC SHA384 2020 CA10v0...*.H.=....+...".b......[...).........lU.....I/.'Q..p..z...................t56<.r...."i....{@..h.&\9..M.M......C../s....0..~0...U.......0.......0...U......
+..)...9mz..3......z0...U.#..0.....P5V.L.f........=.U0...U...........0...U.%..0...+.........+.......0v..+........j0h0$..+.....0...http://ocsp.digicert.com0@..+.....0..4http://cacerts.digicert.com/DigiCertGlobalRootCA.crt0B..U...;0907.5.3.1http://crl3.digicert.com/DigiCertGlobalRootCA.crl0=..U. .6040..   `.H...l..0...g....0...g.....0...g.....0...g.....0..     *.H.............GY......q..]...G..~v+.....&.B.1.J...............-.....S..?...
+........5&.....2..#K.E....|......r......|j.m...6...,..?...u...).......&.e.7.&........x..Ny.v..Q....j..,V..6'.s..}.2..D.....{.(.+        .v.w..z.{R&U.r....O..!....9.V....5.p..F...d..>..F..#..}.O..E:.t0.............A..b/      ..}r..q.<..ct{a\.`6'9^.[tZ.t...i.+|..#.q-hD`F....4....L.K.g[...G0E. G............k.6...d9....S._.9...!..-.,..^.b..qd...m.......++..3+W..........
+14:33:30.586323 IP test.localdomain.52042 > 146.255.192.88.https: Flags [P.], seq 190:316, ack 2690, win 33580, length 126
+E...l.@.@.n!
+......X.J......;...P..,_.......F...BA.w{P@.V....a^R......."....v.d.:.i!FaF.q.....)..u4..{.C*...y..o.$:..........(...........(.U..D.3h$~.@..R."^....r.. c.
+14:33:30.604511 IP 146.255.192.88.https > test.localdomain.52042: Flags [P.], seq 2690:2741, ack 316, win 65535, length 51
+E..[....@..r...X
+......J;......*P.................(.)..V....u.....N@.^..H.`5Qc..JO..a..".       F
+14:33:30.605916 IP test.localdomain.52042 > 146.255.192.88.https: Flags [P.], seq 316:418, ack 2741, win 33580, length 102
+E...l.@.@.n8
+......X.J.....*;...P..,_.......a........C..@.@..($.]..@I'.Pt.....X$.....T:...Y....DR.l...t/7..R?.       ....<.w.g>.7..'.^_\..b...p...8.
+5 packets captured
+9 packets received by filter
 0 packets dropped by kernel
-
-_______________________________
-
-First window.			# For more strict we can add ip address of the host, also we can add the option of display output in hexadecimal format
-[Dima@test ~]$
-sudo tcpdump -A -X -i -I enp0s8 host 192.168.56.202
-tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
-listening on enp0s8, link-type EN10MB (Ethernet), capture size 262144 bytes
-
-Second window.
-[Dima@test ~]$ curl -s -I https://yandex.ru
-
-First window.
-...
-15:06:34.557327 IP 192.168.56.1.51239 > test.localdomain.ssh: Flags [P.], seq 1574898639:1574898703, ack 3513332958, win 8211, length 64
-        0x0000:  4500 0068 bae8 4000 8006 4d8b c0a8 3801  E..h..@...M...8.
-        0x0010:  c0a8 38ca c827 0016 5ddf 0bcf d169 34de  ..8..'..]....i4.
-        0x0020:  5018 2013 f18d 0000 dd8a 0e0c 610b 43b7  P...........a.C.
-        0x0030:  235c 1a78 163b 1293 c17c 6c61 5055 3b91  #\.x.;...|laPU;.
-        0x0040:  7188 b1a4 16b5 ba69 e505 0322 5703 3af9  q......i..."W.:.
-        0x0050:  99e7 8d73 7526 01f4 5103 1666 e913 ff45  ...su&..Q..f...E
-        0x0060:  2898 9e33 5388 4bdd                      (..3S.K.
