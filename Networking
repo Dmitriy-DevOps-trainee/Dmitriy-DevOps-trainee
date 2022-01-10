@@ -164,7 +164,8 @@ Close session 192.168.56.202...
 to capture only needed packages for this http request.
 
 First window.
-[Dima@test ~]$ sudo tcpdump -A -c5 'host drive.ru and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'               # Command to capture HTTP data packets (Google's help). I also purposely limited the output of packages for the example.
+[Dima@test ~]$ sudo tcpdump -A -c5 'host drive.ru and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'
+ # Command to capture HTTP data packets (Google's help). I also purposely limited the output of packages for the example.
 
 Second window.
 [Dima@test ~]$ curl -s -I https://drive.ru
