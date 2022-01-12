@@ -1,0 +1,213 @@
+1. add secondary ip address to you second network interface enp0s8. Each point must be presented with commands and showing that new address was applied to the interface. 
+To repeat adding address for points 2 and 3 address must be deleted (please add deleting address to you homework log) Methods:
+   
+1. using ip utility (stateless)
+[Dima@test ~]$ ip add show dev enp0s8
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 456sec preferred_lft 456sec
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+[Dima@test ~]$ sudo ip address add 192.168.56.202 dev enp0s8
+RTNETLINK answers: File exists
+Result:
+[Dima@test ~]$ ip add show dev enp0s8
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 352sec preferred_lft 352sec
+    inet 192.168.56.202/32 scope global enp0s8
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+[Dima@test ~]$ sudo ip address del 192.168.56.202 dev enp0s8
+Warning: Executing wildcard deletion to stay compatible with old scripts.
+         Explicitly specify the prefix length (192.168.56.202/32) to avoid this warning.
+         This special behaviour is likely to disappear in further releases,
+         fix your scripts!
+Result:
+[Dima@test ~]$ ip add show dev enp0s8
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 479sec preferred_lft 479sec
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+
+2. using centos network configuration file (statefull)	# In this exercize I'm created "ifcfg-enp0s8", because this file did not exist (we are talked about this problem in Slack).
+[Dima@test ~]$ ip add show dev enp0s8
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 479sec preferred_lft 479sec
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+[Dima@test ~]$ cd /etc/sysconfig/network-scripts/
+[Dima@test network-scripts]$ sudo touch ifcfg-enp0s8
+[Dima@test network-scripts]$ sudo nano ifcfg-enp0s8
+DEVICE=enp0s8:1
+Type=Ethernet
+ONBOOT=yes
+NM_CONTROLLED=no
+BOOTPROTO=none
+IPADDR=192.168.56.202
+PREFIX=24
+
+[Dima@test ~]$ sudo service network restart
+
+Result:
+[Dima@test ~]$ ip ad
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 469sec preferred_lft 469sec
+    inet 192.168.56.202/24 brd 192.168.56.255 scope global secondary enp0s8:1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+
+3. using nmcli utility (statefull)
+[Dima@test ~]$ sudo nmcli dev mod enp0s8 +ipv4.addresses 192.168.56.202
+Connection successfully reapplied to device 'enp0s8'.
+
+Result:
+[Dima@test ~]$ ip ad
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 348sec preferred_lft 348sec
+    inet 192.168.56.202/32 brd 192.168.56.202 scope global noprefixroute enp0s8
+       valid_lft forever preferred_lft forever
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+[Dima@test ~]$ sudo nmcli dev mod enp0s8 -ipv4.addresses 192.168.56.202/32
+Connection successfully reapplied to device 'enp0s8'.
+
+Result:
+[Dima@test ~]$ ip ad
+3: enp0s8: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 08:00:27:da:21:8f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.56.101/24 brd 192.168.56.255 scope global noprefixroute dynamic enp0s8
+       valid_lft 550sec preferred_lft 550sec
+    inet6 fe80::e4e0:5409:853:1b62/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+
+
+
+2. You should have a possibility to use ssh client to connect to your node using new address from previous step. Run tcpdump in separate tmux session or separate connection 
+before starting ssh client and capture packets that are related to this ssh connection. Find packets that are related to TCP session establish.
+
+[Dima@test ~]$ sudo tcpdump -i enp0s8 host 192.168.56.202
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on enp0s8, link-type EN10MB (Ethernet), capture size 262144 bytes
+
+# Open session 192.168.56.202...
+
+Result:
+20:36:26.533945 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [S], seq 470    #                                                                                                       870550, win 64240, options [mss 1460,nop,wscale 8,nop,nop,sackOK], length 0
+20:36:26.534030 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [S.], seq 17    #   Packets that are related to TCP session establish.                                                                                                      24002688, ack 470870551, win 29200, options [mss 1460,nop,nop,sackOK,nop,wscale                                                                                                              7], length 0
+20:36:26.534196 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [.], ack 1,     #                                                                                                         win 8212, length 0
+20:36:26.540075 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 1:                                                                                                             29, ack 1, win 8212, length 28
+20:36:26.540119 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [.], ack 29,                                                                                                              win 229, length 0
+20:36:26.550083 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 1:                                                                                                             22, ack 29, win 229, length 21
+20:36:26.552752 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 29                                                                                                             :1285, ack 22, win 8212, length 1256
+20:36:26.556587 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 22                                                                                                             :1302, ack 1285, win 251, length 1280
+20:36:26.558626 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 12                                                                                                             85:1333, ack 1302, win 8207, length 48
+20:36:26.565922 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 13                                                                                                             02:1606, ack 1333, win 251, length 304
+20:36:26.573765 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 13                                                                                                             33:1413, ack 1606, win 8212, length 80
+20:36:26.574707 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 16                                                                                                             06:1670, ack 1413, win 251, length 64
+20:36:26.615459 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [.], ack 167                                                                                                             0, win 8212, length 0
+
+13 packets captured
+14 packets received by filter
+0 packets dropped by kernel
+
+
+3. Close session. Find in tcpdump output packets that are related to TCP session closure.
+
+[Dima@test ~]$ sudo tcpdump -i enp0s8 host 192.168.56.202
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on enp0s8, link-type EN10MB (Ethernet), capture size 262144 bytes
+
+Close session 192.168.56.202...
+
+20:36:26.533945 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [S], seq 470                                                                                                             870550, win 64240, options [mss 1460,nop,wscale 8,nop,nop,sackOK], length 0
+20:36:26.534030 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [S.], seq 17                                                                                                             24002688, ack 470870551, win 29200, options [mss 1460,nop,nop,sackOK,nop,wscale                                                                                                              7], length 0
+20:36:26.534196 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [.], ack 1,                                                                                                              win 8212, length 0
+20:36:26.540075 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 1:                                                                                                             29, ack 1, win 8212, length 28
+20:36:26.540119 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [.], ack 29,                                                                                                              win 229, length 0
+20:36:26.550083 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 1:                                                                                                             22, ack 29, win 229, length 21
+20:36:26.552752 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 29                                                                                                             :1285, ack 22, win 8212, length 1256
+20:36:26.556587 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 22                                                                                                             :1302, ack 1285, win 251, length 1280
+20:36:26.558626 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 12                                                                                                             85:1333, ack 1302, win 8207, length 48
+20:36:26.565922 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 13                                                                                                             02:1606, ack 1333, win 251, length 304
+20:36:26.573765 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [P.], seq 13                                                                                                             33:1413, ack 1606, win 8212, length 80
+20:36:26.574707 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [P.], seq 16                                                                                                             06:1670, ack 1413, win 251, length 64
+20:36:26.615459 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [.], ack 167                                                                                                             0, win 8212, length 0
+20:36:37.669931 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [F.], seq 14    #                                                                                                         13, ack 1670, win 8212, length 0
+20:36:37.674218 IP test.localdomain.ssh > 192.168.56.1.60704: Flags [F.], seq 16    #   Output packets that are related to TCP session closure.                                                                                                    70, ack 1414, win 251, length 0
+20:36:37.674800 IP 192.168.56.1.60704 > test.localdomain.ssh: Flags [.], ack 167    #                                                                                                        1, win 8212, length 0
+
+16 packets captured
+16 packets received by filter
+0 packets dropped by kernel
+
+
+4. run tcpdump and request any http site in separate session. Find HTTP request and answer packets with ASCII data in it.  Tcpdump command must be as strict as possible 
+to capture only needed packages for this http request.
+
+First window.
+[Dima@test ~]$ sudo tcpdump -A -c5 'host drive.ru and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'
+ # Command to capture HTTP data packets (Google's help). I also purposely limited the output of packages for the example.
+
+Second window.
+[Dima@test ~]$ curl -s -I https://drive.ru
+
+First window.
+[Dima@test ~]$ sudo tcpdump -A -c5 'host drive.ru and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on enp0s3, link-type EN10MB (Ethernet), capture size 262144 bytes
+14:33:30.354666 IP test.localdomain.52042 > 146.255.192.88.https: Flags [P.], seq 3407724014:3407724204, ack 1002688002, win 29200, length 190
+E...l.@.@.m.
+......X.J......;...P.r.`?.............,H........(..........._..Cj...1...8.,.
+.+...   .0.../.......9.8.k.....3.2.g.......5.=.../.<.
+...T.........drive.ru......
+.
+................... ....................................@.
+14:33:30.564257 IP 146.255.192.88.https > test.localdomain.52042: Flags [P.], seq 1:2690, ack 190, win 65535, length 2689
+E.
+.....@.
+(...X
+......J;.......P...j.......]...Y......GF.yV.H...n.1?e..|.......... .N$<-.....J..k.LP.u...ha.e.E]\g..+.......................    x..     t.      q..P0..L0.............hn.[0....&n.!0
+..*.H.=...0V1.0 ..U....US1.0...U.
+..DigiCert Inc100...U...'DigiCert TLS Hybrid ECC SHA384 2020 CA10...211011000000Z..221111235959Z0M1.0   ..U....RU1.0...U................1.0...U.
+.       DRIVE LLC1.0...U...
+*.drive.ru0Y0...*.H.=....*.H.=....B..l....s..&..}].5N.j..o...DT....B,.L.7.W.......t#..._.b...I..@._......0...0...U.#..0...
+..)...9mz..3......z0...U......em...,..r...\.f(|O;.0...U....0..
+*.drive.ru..drive.ru0...U...........0...U.%..0...+.........+.......0....U.....0..0F.D.B.@http://crl3.digicert.com/DigiCertTLSHybridECCSHA3842020CA1-1.crl0F.D.B.@http://crl4.digicert.com/DigiCertTLSHybridECCSHA3842020CA1-1.crl0>..U. .70503..g.....0)0'..+.........http://www.digicert.com/CPS0....+........y0w0$..+.....0...http://ocsp.digicert.com0O..+.....0..Chttp://cacerts.digicert.com/DigiCertTLSHybridECCSHA3842020CA1-1.crt0...U.......0.0..}.
++.....y......m...i.g.v.)y...99!.Vs.c.w..W}.`
+..M]&\%].....|o........G0E. }.......'/.N.N..K*j.!6.s...%.g...!..Q...2...t..{..oZ......Q7`. ...@.u.Q.....y.Vm.7x...z..'....B..........|o..o.....F0D. !..F."v.${.=..d...i%....dIMiy.... ^I...u........6-o..hl....;.V;.&..v.A...."FJ...:   B.^N1.....K.h..b......|o..1.....G0E. .Vg.&...@...QfG.0...?..5..z.}..v.!...u.V.J..`.8..4.r.8*..o.T....<c.0
+..*.H.=....h.0e.0....`N%5....x...Y..[.}..hO..>...^.. woM.xq.....W.1..V...NOf....x..j...H.>.H..n.)q.N9.}.vX.....?..:3...0...0.............\..w.z..G.5%.0..      *.H........0a1.0 ..U....US1.0...U.
+..DigiCert Inc1.0...U....www.digicert.com1 0...U....DigiCert Global Root CA0...210414000000Z..310413235959Z0V1.0        ..U....US1.0...U.
+..DigiCert Inc100...U...'DigiCert TLS Hybrid ECC SHA384 2020 CA10v0...*.H.=....+...".b......[...).........lU.....I/.'Q..p..z...................t56<.r...."i....{@..h.&\9..M.M......C../s....0..~0...U.......0.......0...U......
+..)...9mz..3......z0...U.#..0.....P5V.L.f........=.U0...U...........0...U.%..0...+.........+.......0v..+........j0h0$..+.....0...http://ocsp.digicert.com0@..+.....0..4http://cacerts.digicert.com/DigiCertGlobalRootCA.crt0B..U...;0907.5.3.1http://crl3.digicert.com/DigiCertGlobalRootCA.crl0=..U. .6040..   `.H...l..0...g....0...g.....0...g.....0...g.....0..     *.H.............GY......q..]...G..~v+.....&.B.1.J...............-.....S..?...
+........5&.....2..#K.E....|......r......|j.m...6...,..?...u...).......&.e.7.&........x..Ny.v..Q....j..,V..6'.s..}.2..D.....{.(.+        .v.w..z.{R&U.r....O..!....9.V....5.p..F...d..>..F..#..}.O..E:.t0.............A..b/      ..}r..q.<..ct{a\.`6'9^.[tZ.t...i.+|..#.q-hD`F....4....L.K.g[...G0E. G............k.6...d9....S._.9...!..-.,..^.b..qd...m.......++..3+W..........
+14:33:30.586323 IP test.localdomain.52042 > 146.255.192.88.https: Flags [P.], seq 190:316, ack 2690, win 33580, length 126
+E...l.@.@.n!
+......X.J......;...P..,_.......F...BA.w{P@.V....a^R......."....v.d.:.i!FaF.q.....)..u4..{.C*...y..o.$:..........(...........(.U..D.3h$~.@..R."^....r.. c.
+14:33:30.604511 IP 146.255.192.88.https > test.localdomain.52042: Flags [P.], seq 2690:2741, ack 316, win 65535, length 51
+E..[....@..r...X
+......J;......*P.................(.)..V....u.....N@.^..H.`5Qc..JO..a..".       F
+14:33:30.605916 IP test.localdomain.52042 > 146.255.192.88.https: Flags [P.], seq 316:418, ack 2741, win 33580, length 102
+E...l.@.@.n8
+......X.J.....*;...P..,_.......a........C..@.@..($.]..@I'.Pt.....X$.....T:...Y....DR.l...t/7..R?.       ....<.w.g>.7..'.^_\..b...p...8.
+5 packets captured
+9 packets received by filter
+0 packets dropped by kernel
