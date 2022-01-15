@@ -164,8 +164,3 @@ target     prot opt source               destination
 Chain OUTPUT (policy ACCEPT)
 target     prot opt source               destination
 ACCEPT     all  --  anywhere             192.168.56.0/24
-
-
-
-
-
