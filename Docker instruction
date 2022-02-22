@@ -1,0 +1,14 @@
+# Pull this files 
+docker pull dimitrii89/headnode:headnode
+docker pull dimitrii89/worker:worker
+
+# Open the ports: 8088, 9870
+
+# After downloading images. Follow this steps:
+sudo docker network create hadoop-net
+sudo docker build -f Dockerfile -t hadoop-headnode:1.0 .    
+sudo docker build -f Dockerfile -t hadoop-workernode:1.0 .
+sudo docker run -d -p 9870:9870 -p 8088:8088 --hostname headnode2 --network-alias headnode --name headnode --network hadoop-net hadoop-headnode:1.0
+sudo docker run -d --hostname worker2 --network-alias workernode --name workernode --network hadoop-net hadoop-workernode:1.0
+
+# Check your browser with: localhost:8088 and localhost:9870.
