@@ -1,0 +1,125 @@
+# Pull this files 
+docker pull dimitrii89/headnode:headnode
+docker pull dimitrii89/worker:worker
+
+# Open the ports: 8088, 9870
+
+# Dockerfiles:
+
+# Dockerfile_hn
+
+FROM centos:7
+
+MAINTAINER Dima <dimitry.vlasov@gmail.com>
+
+ARG HADOOP_HOME="/usr/local/hadoop/current"
+ENV HADOOP_HOME="$HADOOP_HOME"
+
+RUN yum install -y wget java-1.8.0-openjdk && \
+    wget https://archive.apache.org/dist/hadoop/common/hadoop-3.1.2/hadoop-3.1.2.tar.gz && \
+    tar -xzvf hadoop-3.1.2.tar.gz -C /opt/ && \
+    mkdir /usr/local/hadoop && \
+    ln -s /opt/hadoop-3.1.2 /usr/local/hadoop/current
+
+RUN useradd hadoop && \
+    useradd yarn && \
+    usermod -a -G hadoop yarn && \
+    useradd hdfs && \
+    usermod -a -G hadoop hdfs
+
+RUN rm /usr/local/hadoop/current/etc/hadoop/{hadoop-env.sh,core-site.xml,hdfs-site.xml,yarn-site.xml} && \
+    wget -P /usr/local/hadoop/current/etc/hadoop/ https://gist.githubusercontent.com/rdaadr/2f42f248f02aeda18105805493bb0e9b/raw/hadoop-env.sh && \
+    wget -P /usr/local/hadoop/current/etc/hadoop/ https://gist.githubusercontent.com/rdaadr/64b9abd1700e15f04147ea48bc72b3c7/raw/core-site.xml && \
+    wget -P /usr/local/hadoop/current/etc/hadoop/ https://gist.githubusercontent.com/rdaadr/2bedf24fd2721bad276e416b57d63e38/raw/hdfs-site.xml && \
+    wget -P /usr/local/hadoop/current/etc/hadoop/ https://gist.githubusercontent.com/rdaadr/aade84d36507817ba99085c9e1598151/raw/yarn-site.xml && \
+    sed -i "s/%PATH_TO_OPENJDK8_INSTALLATION%/\/usr\/lib\/jvm\/jre-1.8.0-openjdk/g" /usr/local/hadoop/current/etc/hadoop/hadoop-env.sh && \
+    sed -i "s/%PATH_TO_HADOOP_INSTALLATION/\/usr\/local\/hadoop\/current/g" /usr/local/hadoop/current/etc/hadoop/hadoop-env.sh && \
+    sed -i "s/%HADOOP_HEAP_SIZE%/512M/g" /usr/local/hadoop/current/etc/hadoop/hadoop-env.sh && \
+    sed -i "s/%HDFS_NAMENODE_HOSTNAME%/headnode/g" /usr/local/hadoop/current/etc/hadoop/core-site.xml && \
+    sed -i "s/%NAMENODE_DIRS%/\/opt\/mount1\/namenode-dir,\/opt\/mount2\/namenode-dir/g" /usr/local/hadoop/current/etc/hadoop/hdfs-site.xml && \
+    sed -i "s/%DATANODE_DIRS%/\/opt\/mount1\/datanode-dir,\/opt\/mount2\/datanode-dir/g" /usr/local/hadoop/current/etc/hadoop/hdfs-site.xml && \
+    sed -i "s/%NODE_MANAGER_LOCAL_DIR%/\/opt\/mount1\/nodemanager-local-dir,\/opt\/mount2\/nodemanager-local-dir/g" /usr/local/hadoop/current/etc/hadoop/yarn-site.xml && \
+    sed -i "s/%NODE_MANAGER_LOG_DIR%/\/opt\/mount1\/nodemanager-log-dir,\/opt\/mount2\/nodemanager-log-dir/g" /usr/local/hadoop/current/etc/hadoop/yarn-site.xml && \
+    sed -i "s/host1/0.0.0.0/g" /usr/local/hadoop/current/etc/hadoop/yarn-site.xml
+
+RUN mkdir /usr/local/hadoop/current/logs && \
+    chown hdfs:hadoop /usr/local/hadoop/current/logs && \
+    chmod g+w /usr/local/hadoop/current/logs && \
+    mkdir -p /opt/mount{1,2}/namenode-dir && \
+    chown hdfs:hadoop /opt/mount1/namenode-dir && \
+    chown hdfs:hadoop /opt/mount2/namenode-dir
+
+VOLUME ["/opt/mount1", "/opt/mount2"]
+
+EXPOSE 9870 8088
+
+COPY start_hn.sh /opt/start.sh
+
+USER root
+CMD ["/bin/bash", "/opt/start.sh"]
+
+# Dockerfile_wn
+
+FROM centos:7
+
+MAINTAINER Dima <dimitry.vlasov@gmail.com>
+
+ARG HADOOP_HOME="/usr/local/hadoop/current"
+ENV HADOOP_HOME="$HADOOP_HOME"
+
+RUN yum install -y wget java-1.8.0-openjdk && \
+    wget https://archive.apache.org/dist/hadoop/common/hadoop-3.1.2/hadoop-3.1.2.tar.gz && \
+    tar -xzvf hadoop-3.1.2.tar.gz -C /opt/ && \
+    mkdir /usr/local/hadoop && \
+    ln -s /opt/hadoop-3.1.2 /usr/local/hadoop/current
+
+RUN useradd hadoop && \
+    useradd yarn && \
+    usermod -a -G hadoop yarn && \
+    useradd hdfs && \
+    usermod -a -G hadoop hdfs
+
+RUN rm /usr/local/hadoop/current/etc/hadoop/{hadoop-env.sh,core-site.xml,hdfs-site.xml,yarn-site.xml} && \
+    wget -P /usr/local/hadoop/current/etc/hadoop/ https://gist.githubusercontent.com/rdaadr/2f42f248f02aeda18105805493bb0e9b/raw/hadoop-env.sh && \
+    wget -P /usr/local/hadoop/current/etc/hadoop/ https://gist.githubusercontent.com/rdaadr/64b9abd1700e15f04147ea48bc72b3c7/raw/core-site.xml && \
+    wget -P /usr/local/hadoop/current/etc/hadoop/ https://gist.githubusercontent.com/rdaadr/2bedf24fd2721bad276e416b57d63e38/raw/hdfs-site.xml && \
+    wget -P /usr/local/hadoop/current/etc/hadoop/ https://gist.githubusercontent.com/rdaadr/aade84d36507817ba99085c9e1598151/raw/yarn-site.xml && \
+    sed -i "s/%PATH_TO_OPENJDK8_INSTALLATION%/\/usr\/lib\/jvm\/jre-1.8.0-openjdk/g" /usr/local/hadoop/current/etc/hadoop/hadoop-env.sh && \
+    sed -i "s/%PATH_TO_HADOOP_INSTALLATION/\/usr\/local\/hadoop\/current/g" /usr/local/hadoop/current/etc/hadoop/hadoop-env.sh && \
+    sed -i "s/%HADOOP_HEAP_SIZE%/512M/g" /usr/local/hadoop/current/etc/hadoop/hadoop-env.sh && \
+    sed -i "s/%HDFS_NAMENODE_HOSTNAME%/headnode/g" /usr/local/hadoop/current/etc/hadoop/core-site.xml && \
+    sed -i "s/%NAMENODE_DIRS%/\/opt\/mount1\/namenode-dir,\/opt\/mount2\/namenode-dir/g" /usr/local/hadoop/current/etc/hadoop/hdfs-site.xml && \
+    sed -i "s/%DATANODE_DIRS%/\/opt\/mount1\/datanode-dir,\/opt\/mount2\/datanode-dir/g" /usr/local/hadoop/current/etc/hadoop/hdfs-site.xml && \
+    sed -i "s/%NODE_MANAGER_LOCAL_DIR%/\/opt\/mount1\/nodemanager-local-dir,\/opt\/mount2\/nodemanager-local-dir/g" /usr/local/hadoop/current/etc/hadoop/yarn-site.xml && \
+    sed -i "s/%NODE_MANAGER_LOG_DIR%/\/opt\/mount1\/nodemanager-log-dir,\/opt\/mount2\/nodemanager-log-dir/g" /usr/local/hadoop/current/etc/hadoop/yarn-site.xml && \
+    sed -i "s/host1/headnode/g" /usr/local/hadoop/current/etc/hadoop/yarn-site.xml
+
+RUN mkdir /usr/local/hadoop/current/logs && \
+    chown hdfs:hadoop /usr/local/hadoop/current/logs && \
+    chmod g+w /usr/local/hadoop/current/logs && \
+    mkdir -p /opt/mount{1,2}/datanode-dir && \
+    chown hdfs:hadoop /opt/mount1/datanode-dir && \
+    chown hdfs:hadoop /opt/mount2/datanode-dir && \
+    mkdir /opt/mount{1,2}/nodemanager-local-dir && \
+    mkdir /opt/mount{1,2}/nodemanager-log-dir && \
+    chown yarn:hadoop /opt/mount1/nodemanager-local-dir && \
+    chown yarn:hadoop /opt/mount2/nodemanager-local-dir && \
+    chown yarn:hadoop /opt/mount1/nodemanager-log-dir && \
+    chown yarn:hadoop /opt/mount2/nodemanager-log-dir
+
+VOLUME ["/opt/mount1", "/opt/mount2"]
+
+COPY start_wn.sh /opt/start.sh
+
+USER root
+CMD ["/bin/bash", "/opt/start.sh"]
+
+
+# After downloading images and creating Dockerfiles. Follow this steps:
+sudo docker network create hadoop-net
+sudo docker build -f Dockerfile -t hadoop-headnode:1.0 .    # Dockerfile_hn  
+sudo docker build -f Dockerfile -t hadoop-workernode:1.0 .  # Dockerfile_wn
+sudo docker run -d -p 9870:9870 -p 8088:8088 --hostname headnode2 --network-alias headnode --name headnode --network hadoop-net hadoop-headnode:1.0
+sudo docker run -d --hostname worker2 --network-alias workernode --name workernode --network hadoop-net hadoop-workernode:1.0
+
+# Check your browser with: localhost:8088 and localhost:9870.
