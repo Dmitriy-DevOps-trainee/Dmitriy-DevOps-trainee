@@ -1,0 +1,159 @@
+# Task 1
+values = input('Введите цифры через запятую: ')
+list = values.split(",")
+tuple = tuple(list)
+print('List : ',list)
+print('Tuple : ',tuple)
+
+# Result
+(my_env) [dima@localhost bin]$ python Task_1.py
+Введите цифры через запятую: 4,6,7,65,43
+List :  ['4', '6', '7', '65', '43']
+Tuple :  ('4', '6', '7', '65', '43')
+
+
+
+# Task 2
+list = map(int, input('Введите цифры через пробел: ').split())
+
+for x in list:
+    if x == 254:
+        print(x)
+        break;
+    elif x % 2 == 0:
+        print(x)
+        
+# Result
+(my_env) [dima@localhost bin]$ python Task_2.py
+Введите цифры через пробел: 6 7 8 34 56 254 300
+6
+8
+34
+56
+254
+
+
+
+# Task 3
+words = ['Питон', 'Тест', 'Версия', 'Another word', '15']
+word = None
+while word not in words:
+    word = input('Слова в списке (Питон, Тест, Версия, Another word, 15). Введите слово: ')
+
+print('Вот, это слово: {}'.format(word))
+
+# Result
+(my_env) [dima@localhost bin]$ python Task_3.py
+Слова в списке (Питон, Тест, Версия, Another word, 15). Введите слово: один
+Слова в списке (Питон, Тест, Версия, Another word, 15). Введите слово: Тест
+Вот, это слово: Тест
+
+
+
+# Task 4
+import os
+PID = os.getpid()
+str1 = F"This script has the following PID: {PID}"
+
+import getpass
+username = getpass.getuser()
+str2 = F"{str1} It was ran by {username}"
+
+import os
+OS = os.name
+str3 = F"{str2}to work happily on {OS}"
+
+import platform
+rls = platform.release()
+result = F"{str3} - {rls}"
+print(result)
+
+# Result
+(my_env) [dima@localhost bin]$ python Task_4.py
+This script has the following PID: 1469 It was ran by dimato work happily on posix - 3.10.0-1160.el7.x86_64
+
+
+
+# Task 5
+def integers_only(lst):
+   return sorted(lst)[:3]
+data = input('Введите цифры через пробел: ').split()
+errn = set()
+for x in data:
+  try:
+    int(x)
+  except ValueError:
+    errn.add(x)
+if not errn:
+  print(integers_only(data))
+else:
+  print(f"You've passed some extra elements that I can't parse: {errn}")
+
+# Result
+(my_env) [dima@localhost bin]$ python Task_5.py
+Введите цифры через пробел: 5 6 78 87 6.6 ffg
+You've passed some extra elements that I can't parse: {'ffg', '6.6'}
+
+
+
+# Task 6
+from collections import Counter
+ 
+def create(str_):
+    return dict(Counter(str_))
+    
+def print_(dict_):
+    print(*dict_.items())
+    
+n = input("Введите слово:")
+result = create(n)
+print (result)
+
+# Result
+(my_env) [dima@localhost bin]$ python Task_6.py
+Введите слово: Питон питон python
+{' ': 3, 'П': 1, 'и': 2, 'т': 2, 'о': 2, 'н': 2, 'п': 1, 'p': 1, 'y': 1, 't': 1, 'h': 1, 'o': 1, 'n': 1}
+
+
+
+# Task 7
+n = int(input())
+mat = [[0]*n for i in range(n)]
+st, m = 1, 0
+mat[n//2][n//2]=n*n
+for v in range(n//2):
+    for i in range(n-m):
+        mat[v][i+v] = st
+        st+=1
+        #i+=1
+
+    for i in range(v+1, n-v):
+        mat[i][-v-1] = st
+        st+=1
+        #i+=1
+
+    for i in range(v+1, n-v):
+        mat[-v-1][-i-1] =st
+        st+=1
+        #i+=1
+
+    for i in range(v+1, n-(v+1)):
+        mat[-i-1][v]=st
+        st+=1
+        #i+=1
+    #v+=1
+    m+=2
+
+for i in mat:
+    print(*i)
+
+# Result
+(my_env) [dima@localhost bin]$ python Task_7.py
+5
+1 2 3 4 5
+16 17 18 19 6
+15 24 25 20 7
+14 23 22 21 8
+13 12 11 10 9
+
+
