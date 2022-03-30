@@ -1,0 +1,322 @@
+Repositories and Packages
+
+
+- Use rpm for the following tasks:
+
+1. Download sysstat package.
+[Dima@test ~]$ wget http://mirror.centos.org/centos/7/os/x86_64/Packages/sysstat-10.1.5-19.el7.x86_64.rpm
+
+2. Get information from downloaded sysstat package file.
+[Dima@test rpm]$ sudo rpm -q sysstat
+sysstat-10.1.5-19.el7.x86_64
+
+3. Install sysstat package and get information about files installed by this package.
+[Dima@test ~]$ sudo rpm -ivh sysstat-10.1.5-19.el7.x86_64.rpm
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:sysstat-10.1.5-19.el7            ################################# [100%]
+
+[Dima@test ~]$ repoquery --installed -l sysstat-10.1.5-19.el7.x86_64 - команда для вывода списка файлов.
+
+- Add NGINX repository (need to find repository config on https://www.nginx.com/) and complete the following tasks using yum:
+
+1. Check if NGINX repository enabled or not.
+[Dima@test ~]$ cd /etc/yum.repos.d
+[Dima@test yum.repos.d]$ sudo nano nginx.repo
+[nginx]
+name=nginx repo
+baseurl=https://nginx.org/packages/centos/$releasever/$basearch/
+gpgcheck=0
+enabled=1
+
+2. Install NGINX.
+[Dima@test local]$ sudo yum install nginx
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: centos-mirror.rbc.ru
+ * epel: ftp.lysator.liu.se
+ * extras: mirror.yandex.ru
+ * updates: centos-mirror.rbc.ru
+Package 1:nginx-1.20.2-1.el7.ngx.x86_64 already installed and latest version
+Nothing to do
+
+3. Check yum history and undo NGINX installation.
+[Dima@test ~]$ sudo yum history list nginx
+Loaded plugins: fastestmirror, langpacks
+ID     | Command line             | Date and time    | Action(s)      | Altered
+-------------------------------------------------------------------------------
+     9 | install nginx            | 2021-12-24 06:45 | Update         |    1
+     8 | install nginx            | 2021-12-24 06:34 | Install        |    3
+history list
+
+[Dima@test ~]$ sudo yum remove nginx
+Loaded plugins: fastestmirror, langpacks
+Resolving Dependencies
+--> Running transaction check
+---> Package nginx.x86_64 1:1.20.2-1.el7.ngx will be erased
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package       Arch           Version                      Repository      Size
+================================================================================
+Removing:
+ nginx         x86_64         1:1.20.2-1.el7.ngx           @nginx         2.8 M
+
+Transaction Summary
+================================================================================
+Remove  1 Package
+
+Installed size: 2.8 M
+Is this ok [y/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Erasing    : 1:nginx-1.20.2-1.el7.ngx.x86_64                              1/1
+  Verifying  : 1:nginx-1.20.2-1.el7.ngx.x86_64                              1/1
+
+Removed:
+  nginx.x86_64 1:1.20.2-1.el7.ngx
+
+Complete!
+
+4. Disable NGINX repository.
+[Dima@test ~]$ cd /etc/yum.repos.d
+[Dima@test yum.repos.d]$ sudo nano nginx.repo
+[nginx]
+name=nginx repo
+baseurl=https://nginx.org/packages/centos/$releasever/$basearch/
+gpgcheck=0
+enabled=0
+
+5. Remove sysstat package installed in the first task.
+[Dima@test ~]$ sudo yum remove sysstat
+Loaded plugins: fastestmirror, langpacks
+Resolving Dependencies
+--> Running transaction check
+---> Package sysstat.x86_64 0:10.1.5-19.el7 will be erased
+--> Finished Dependency Resolution
+nginx/7/x86_64                                           | 2.9 kB     00:00
+
+Dependencies Resolved
+
+================================================================================
+ Package          Arch            Version                  Repository      Size
+================================================================================
+Removing:
+ sysstat          x86_64          10.1.5-19.el7            @base          1.1 M
+
+Transaction Summary
+================================================================================
+Remove  1 Package
+
+Installed size: 1.1 M
+Is this ok [y/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Erasing    : sysstat-10.1.5-19.el7.x86_64                                 1/1
+  Verifying  : sysstat-10.1.5-19.el7.x86_64                                 1/1
+
+Removed:
+  sysstat.x86_64 0:10.1.5-19.el7
+
+Complete!
+
+6. Install EPEL repository and get information about it.
+[Dima@test ~]$ sudo yum install epel-release
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: centos-mirror.rbc.ru
+ * epel: www.nic.funet.fi
+ * extras: mirror.corbina.net
+ * updates: centos-mirror.rbc.ru
+Resolving Dependencies
+--> Running transaction check
+---> Package epel-release.noarch 0:7-11 will be updated
+---> Package epel-release.noarch 0:7-14 will be an update
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package                Arch             Version           Repository      Size
+================================================================================
+Updating:
+ epel-release           noarch           7-14              epel            15 k
+
+Transaction Summary
+================================================================================
+Upgrade  1 Package
+
+Total download size: 15 k
+Is this ok [y/d/N]: y
+Downloading packages:
+Delta RPMs disabled because /usr/bin/applydeltarpm not installed.
+epel-release-7-14.noarch.rpm                               |  15 kB   00:00
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Updating   : epel-release-7-14.noarch                                     1/2
+  Cleanup    : epel-release-7-11.noarch                                     2/2
+  Verifying  : epel-release-7-14.noarch                                     1/2
+  Verifying  : epel-release-7-11.noarch                                     2/2
+
+Updated:
+  epel-release.noarch 0:7-14
+
+Complete!
+
+[Dima@test ~]$ yum info epel-release
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: mirror.logol.ru
+ * epel: www.nic.funet.fi
+ * extras: mirrors.datahouse.ru
+ * updates: mirrors.datahouse.ru
+Installed Packages
+Name        : epel-release
+Arch        : noarch
+Version     : 7
+Release     : 14
+Size        : 25 k
+Repo        : installed
+From repo   : epel
+Summary     : Extra Packages for Enterprise Linux repository configuration
+URL         : http://download.fedoraproject.org/pub/epel
+License     : GPLv2
+Description : This package contains the Extra Packages for Enterprise Linux
+            : (EPEL) repository GPG key as well as configuration for yum.
+
+7. Find how much packages provided exactly by EPEL repository.
+[Dima@test ~]$ sudo yum --disablerepo "*" --enablerepo epel list available | tree
+...
+14 directories, 170 files        # Количество файлов
+
+8. Install ncdu package from EPEL repo.
+[Dima@test ~]$ yum install ncdu
+Loaded plugins: fastestmirror, langpacks
+You need to be root to perform this command.
+[Dima@test ~]$ sudo yum install ncdu
+[sudo] password for Dima:
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: centos-mirror.rbc.ru
+ * epel: mirror.yandex.ru
+ * extras: mirror.yandex.ru
+ * updates: centos-mirror.rbc.ru
+Resolving Dependencies
+--> Running transaction check
+---> Package ncdu.x86_64 0:1.16-1.el7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+================================================================================
+ Package         Arch              Version                Repository       Size
+================================================================================
+Installing:
+ ncdu            x86_64            1.16-1.el7             epel             53 k
+
+Transaction Summary
+================================================================================
+Install  1 Package
+
+Total download size: 53 k
+Installed size: 89 k
+Is this ok [y/d/N]: y
+Downloading packages:
+ncdu-1.16-1.el7.x86_64.rpm                                 |  53 kB   00:00
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : ncdu-1.16-1.el7.x86_64                                       1/1
+  Verifying  : ncdu-1.16-1.el7.x86_64                                       1/1
+
+Installed:
+  ncdu.x86_64 0:1.16-1.el7
+
+Complete!
+
+
+Work with files
+
+
+1. Find all regular files below 100 bytes inside your home directory.
+[Dima@test ~]$ find . -type f -size +0c -size -100c
+./.bash_logout
+./.cache/abrt/lastnotification
+./.lesshst
+./directory.txt
+./task3.sh
+./.ssh/config
+
+2. Find an inode number and a hard links count for the root directory. The hard link count should be about 17. Why?
+[Dima@test /]$ ls -li / | grep root
+ 8415544 drwxr-xr-x.   2 root root    6 Dec 26 00:49 backup
+     120 lrwxrwxrwx.   1 root root    7 Nov 27 23:07 bin -> usr/bin
+      64 dr-xr-xr-x.   6 root root 4096 Nov 29 15:11 boot
+       3 drwxr-xr-x   20 root root 3240 Jan 18 14:45 dev
+ 4194369 drwxr-xr-x.  99 root root 8192 Jan 18 15:01 etc
+ 8435996 drwxrwxrwx.  16 root root  211 Dec 15 00:12 home
+     124 lrwxrwxrwx.   1 root root    7 Nov 27 23:07 lib -> usr/lib
+      82 lrwxrwxrwx.   1 root root    9 Nov 27 23:07 lib64 -> usr/lib64
+12583333 drwxr-xr-x.   2 root root    6 Apr 11  2018 media
+      83 drwxr-xr-x.   2 root root    6 Apr 11  2018 mnt
+ 4195292 drwxr-xr-x.   3 root root   83 Dec 18 19:33 opt
+       1 dr-xr-xr-x  126 root root    0 Jan 18  2022 proc
+ 8409153 dr-xr-x---.   7 root root 4096 Dec 24 20:32 root		# Номер inode (8409153) и количество жёстких ссылок = 7, у меня. Не могу понять почему должно быть 17, потратил много времени.
+    7177 drwxr-xr-x   32 root root 1060 Jan 18 15:01 run
+     125 lrwxrwxrwx.   1 root root    8 Nov 27 23:07 sbin -> usr/sbin
+ 8435997 drwxr-xr-x.   2 root root    6 Apr 11  2018 srv
+       1 dr-xr-xr-x   13 root root    0 Jan 18 15:47 sys
+   80392 -rw-r--r--.   1 root root   16 Dec  6 20:18 task2.txt
+ 4194376 drwxrwxrwt.  23 root root 4096 Jan 18 16:01 tmp
+ 8435958 drwxr-xr-x.  13 root root  155 Nov 27 23:07 usr
+12582977 drwxr-xr-x.  20 root root  282 Nov 29 15:10 var
+
+
+3. Check what inode numbers have "/" and "/boot" directory. Why?
+[Dima@test /]$ ls -i -a /
+      64 .      4194369 etc          83 mnt        125 sbin        8435958 usr
+      64 ..     8435996 home    4195292 opt    8435997 srv        12582977 var
+     120 bin        124 lib           1 proc         1 sys
+      64 boot        82 lib64   8409153 root     80392 task2.txt
+       3 dev   12583333 media      7177 run    4194376 tmp
+
+# Одинаковое количество inode может быть в разных каталогах при условии, что они в одной файловой системе и относятся к одному и тому же файлу. 
+Каждый индексный дескриптор имеет счетчик, который записывает количество ссылок (то есть записей каталога), которые ссылаются на него.
+
+4. Check the root directory space usage by du command. Compare it with an information from df. If you find differences, try to find out why it happens.
+[root@test ~]# du
+4       ./.cache/abrt
+4       ./.cache
+0       ./.config/abrt
+0       ./.config
+8       ./share/cases
+8       ./share
+0       ./.pki/nssdb
+0       ./.pki
+44      .
+[root@test ~]# df
+Filesystem                   1K-blocks    Used Available Use% Mounted on
+devtmpfs                        495644       0    495644   0% /dev
+tmpfs                           507376       0    507376   0% /dev/shm
+tmpfs                           507376    6972    500404   2% /run
+tmpfs                           507376       0    507376   0% /sys/fs/cgroup
+/dev/mapper/centos_test-root   6486016 2360312   4125704  37% /
+/dev/sda1                      1038336  141116    897220  14% /boot
+tmpfs                           101476       0    101476   0% /run/user/1000
+
+# Отличие заключается в том, что du – выполняет запрос к каждому найденному файлу в разделе и суммирует дисковое пространство для каждого файла, а df – выполняет запрос 
+к файловой системе и отображает количество доступного дискового пространства. 
+
+5. Check disk space usage of /var/log directory using ncdu
+[Dima@test /]$ ncdu /var/log
