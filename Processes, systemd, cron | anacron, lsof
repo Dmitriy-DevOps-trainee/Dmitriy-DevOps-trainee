@@ -1,0 +1,274 @@
+Processes
+
+1. Run a sleep command three times at different intervals
+[root@test ~]# sleep 1000 &
+[1] 4751
+[root@test ~]# sleep 2000 &
+[2] 4761
+[root@test ~]# sleep 3000 &
+[3] 4762
+
+2. Send a SIGSTOP signal to all of them in three different ways.
+[root@test ~]# kill -19 4751 && kill -SIGSTOP 4761 && kill -STOP 4762
+
+3. Check their statuses with a job command
+[root@test ~]# jobs -l
+[1]   4751 Stopped (signal)        sleep 1000
+[2]-  4761 Stopped (signal)        sleep 2000
+[3]+  4762 Stopped (signal)        sleep 3000
+
+4. Terminate one of them. (Any)
+[root@test ~]# kill -SIGTERM 4751
+[root@test ~]# jobs -l
+[1]   4751 Terminated              sleep 1000
+[2]   4761 Stopped (signal)        sleep 2000
+[3]-  4762 Stopped (signal)        sleep 3000
+
+5. To other send a SIGCONT in two different ways.
+[root@test ~]# kill -CONT 4761 && kill -18 4762
+[root@test ~]# jobs -l
+[2]-  4761 Running                 sleep 2000 &
+[3]+  4762 Running                 sleep 3000 &
+
+6. Kill one by PID and the second one by job ID
+[root@test ~]# kill -9 %3; kill -9 4761
+[root@test ~]# jobs -l
+[root@test ~]# 
+
+
+Systemd
+
+1. Write two daemons: one should be a simple daemon and do sleep 10 after a start and then do echo 1 > /tmp/homework, the second one should be oneshot and do echo 2 > /tmp/homework without any sleep
+[root@test ~]# cd /opt
+[root@test opt]# touch echo-1.sh
+[root@test opt]# nano echo-1.sh
+#!/bin/bash
+
+echo "Start"
+sleep 10
+echo 1 > /tmp/homework
+
+[root@test opt]# touch echo-2.sh
+[root@test opt]# nano echo-2.sh
+#!/bin/bash
+
+echo 2 > /tmp/homework
+
+[root@test opt]# ll
+echo-1.sh  echo-2.sh
+
+[root@test opt]# chmod +x echo-1.sh
+[root@test opt]# chmod +x echo-2.sh
+
+[root@test opt]# cd /etc/systemd/system
+[root@test system]# touch MyUnit1.service
+[root@test system]# touch MyUnit2.service
+[root@test system]# nano MyUnit1.service
+[Unit]
+Description=MyUnit1
+
+[Service]
+Type=simple
+
+ExecStart=/opt/echo-1.sh 
+
+[root@test system]# systemctl daemon-reload
+[root@test system]# systemctl start MyUnit1
+[root@test system]# cat /tmp/homework
+1
+
+[root@test system]#  nano MyUnit2.service
+[Unit]
+Description=MyUnit2
+
+[Service]
+Type=oneshot
+ExecStart=/opt/echo-2.sh
+
+[root@test system]# systemctl daemon-reload
+[root@test system]# systemctl start MyUnit2
+[root@test system]# cat /tmp/homework
+2
+
+
+2. Make the second depended on the first one (should start only after the first)
+[root@test system]#  nano MyUnit2.service
+[Unit]
+Description=MyUnit2
+After=MyUnit1.service
+Requires=MyUnit1.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/echo-2.sh
+
+
+3. Write a timer for the second one and configure it to run on 01.01.2019 at 00:00
+[root@test system]# touch MyUnit2.timer
+[root@test system]# nano MyUnit2.timer
+[Unit]
+Description=MyUnit2.timer
+
+[Timer]
+OnCalendar=2019-01-01 00:00:00
+AccuracySec=1us
+
+
+4. Start all daemons and timer, check their statuses, timer list and /tmp/homework
+[root@test system]# systemctl daemon-reload
+[root@test system]# systemctl start MyUnit1.service MyUnit2.service MyUnit2.timer
+[root@test opt]# systemctl status MyUnit1.service MyUnit2.service MyUnit2.timer
+
+● MyUnit1.service - MyUnit1
+   Loaded: loaded (/etc/systemd/system/MyUnit1.service; static; vendor preset: disabled)
+   Active: inactive (dead) since Fri 2021-12-17 21:23:35 MSK; 11s ago
+  Process: 7827 ExecStart=/opt/echo-1.sh (code=exited, status=0/SUCCESS)
+ Main PID: 7827 (code=exited, status=0/SUCCESS)
+
+Dec 17 21:23:25 test.localdomain systemd[1]: Started MyUnit1.
+Dec 17 21:23:25 test.localdomain echo-1.sh[7827]: Start
+
+● MyUnit2.service - MyUnit2
+   Loaded: loaded (/etc/systemd/system/MyUnit2.service; static; vendor preset: disabled)
+   Active: inactive (dead) since Fri 2021-12-17 21:23:25 MSK; 21s ago
+  Process: 7828 ExecStart=/opt/echo-2.sh (code=exited, status=0/SUCCESS)
+ Main PID: 7828 (code=exited, status=0/SUCCESS)
+
+Dec 17 21:23:25 test.localdomain systemd[1]: Starting MyUnit2...
+Dec 17 21:23:25 test.localdomain systemd[1]: Started MyUnit2.
+
+● MyUnit2.timer
+   Loaded: loaded (/etc/systemd/system/MyUnit2.timer; static; vendor preset: disabled)
+   Active: active (waiting) since Fri 2021-12-17 19:43:38 MSK; 1h 40min ago
+
+Dec 17 19:43:38 test.localdomain systemd[1]: Started MyUnit2.timer.
+
+
+5. Stop all daemons and timer
+[root@test system]# systemctl stop MyUnit1.service MyUnit2.service MyUnit2.timer
+[root@test system]# systemctl status MyUnit1.service MyUnit2.service MyUnit2.timer
+● MyUnit1.service - MyUnit1
+   Loaded: loaded (/etc/systemd/system/MyUnit1.service; static; vendor preset: disabled)
+   Active: inactive (dead)
+
+Dec 17 19:33:24 test.localdomain systemd[1]: Started MyUnit1.
+Dec 17 19:33:24 test.localdomain echo-1.sh[5933]: Start
+Dec 17 19:33:43 test.localdomain systemd[1]: Started MyUnit1.
+Dec 17 19:33:44 test.localdomain echo-1.sh[5963]: Start
+Dec 17 19:41:43 test.localdomain systemd[1]: Started MyUnit1.
+Dec 17 19:41:43 test.localdomain echo-1.sh[6123]: Start
+Dec 17 19:43:38 test.localdomain systemd[1]: Started MyUnit1.
+Dec 17 19:43:38 test.localdomain echo-1.sh[6159]: Start
+Dec 17 21:23:25 test.localdomain systemd[1]: Started MyUnit1.
+Dec 17 21:23:25 test.localdomain echo-1.sh[7827]: Start
+
+● MyUnit2.service - MyUnit2
+   Loaded: loaded (/etc/systemd/system/MyUnit2.service; static; vendor preset: disabled)
+   Active: inactive (dead)
+
+Dec 17 19:33:24 test.localdomain systemd[1]: Starting MyUnit2...
+Dec 17 19:33:24 test.localdomain systemd[1]: Started MyUnit2.
+Dec 17 19:33:44 test.localdomain systemd[1]: Starting MyUnit2...
+Dec 17 19:33:44 test.localdomain systemd[1]: Started MyUnit2.
+Dec 17 19:41:43 test.localdomain systemd[1]: Starting MyUnit2...
+Dec 17 19:41:43 test.localdomain systemd[1]: Started MyUnit2.
+Dec 17 19:43:38 test.localdomain systemd[1]: Starting MyUnit2...
+Dec 17 19:43:38 test.localdomain systemd[1]: Started MyUnit2.
+Dec 17 21:23:25 test.localdomain systemd[1]: Starting MyUnit2...
+Dec 17 21:23:25 test.localdomain systemd[1]: Started MyUnit2.
+
+● MyUnit2.timer
+   Loaded: loaded (/etc/systemd/system/MyUnit2.timer; static; vendor preset: disabled)
+   Active: inactive (dead)
+
+Dec 17 19:33:24 test.localdomain systemd[1]: Started MyUnit2.timer.
+Dec 17 19:39:17 test.localdomain systemd[1]: Stopped MyUnit2.timer.
+Dec 17 19:41:43 test.localdomain systemd[1]: Started MyUnit2.timer.
+Dec 17 19:42:46 test.localdomain systemd[1]: Stopped MyUnit2.timer.
+Dec 17 19:43:38 test.localdomain systemd[1]: Started MyUnit2.timer.
+Dec 17 21:25:49 test.localdomain systemd[1]: Stopped MyUnit2.timer.
+
+
+Cron/Anacron
+
+1. Create an anacron job which executes a script with echo Hello > /opt/hello and runs every 2 days
+[root@test ~]# cat /etc/anacrontab
+# /etc/anacrontab: configuration file for anacron
+# See anacron(8) and anacrontab(5) for details.
+SHELL=/bin/sh
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+# the maximal random delay added to the base delay of the jobs
+RANDOM_DELAY=45
+# the jobs will be started during the following hours only
+START_HOURS_RANGE=3-22
+
+#period in days   delay in minutes   job-identifier   command
+1       5       cron.daily              nice run-parts /etc/cron.daily
+7       25      cron.weekly             nice run-parts /etc/cron.weekly
+@monthly 45     cron.monthly            nice run-parts /etc/cron.monthly
+
+[root@test ~]# nano anacrontab
+2       5       test.anacron            /bin/bash echo Hello > /opt/hello
+
+2. Create a cron job which executes the same command (will be better to create a script for this) and runs it in 1 minute after system boot.
+[root@test opt]# touch cron_test.sh
+[root@test opt]# nano cron_test.sh
+#!/bin/bash
+
+echo Hello > /opt/hello
+
+[root@test opt]# chmod +x cron_test.sh
+[root@test ~]# crontab -e
+@reboot /bin/sleep 60 && /opt/cron_test.sh
+
+crontab: installing new crontab
+
+3. Restart your virtual machine and check previous job proper execution
+[root@test ~]# reboot
+[root@test ~]# cd /opt
+[root@test opt]# ll
+total 16
+-rwxr-xr-x. 1 root root 37 Dec 18 19:26 cron_test.sh
+-rwxr-xr-x. 1 root root 58 Dec 17 18:56 echo-1.sh
+-rwxr-xr-x. 1 root root 36 Dec 17 18:52 echo-2.sh
+-rw-r--r--. 1 root root  6 Dec 18 19:33 hello
+
+
+lsof
+
+1. Run a sleep command, redirect stdout and stderr into two different files (both of them will be empty).
+[root@test ~]# sleep 1000 & >out2>&1
+[2] 1981
+
+2. Find with the lsof command which files this process uses, also find from which file it gain stdin.
+[Dima@test ~]$ lsof -p 1981
+COMMAND  PID USER   FD   TYPE DEVICE  SIZE/OFF     NODE NAME
+sleep   1981 Dima  cwd    DIR  253,0      4096    78177 /home/Dima
+sleep   1981 Dima  rtd    DIR  253,0       241       64 /
+sleep   1981 Dima  txt    REG  253,0     33128 12691570 /usr/bin/sleep
+sleep   1981 Dima  mem    REG  253,0 106172832 12799787 /usr/lib/locale/locale-archive
+sleep   1981 Dima  mem    REG  253,0   2156272    15673 /usr/lib64/libc-2.17.so
+sleep   1981 Dima  mem    REG  253,0    163312    15666 /usr/lib64/ld-2.17.so
+sleep   1981 Dima    0u   CHR  136,0       0t0        3 /dev/pts/0
+sleep   1981 Dima    1u   CHR  136,0       0t0        3 /dev/pts/0
+sleep   1981 Dima    2u   CHR  136,0       0t0        3 /dev/pts/0
+
+# CHR - character mode, что означает символьный режим, поэтому это больше относится к стандартному stdin, 
+т.е. клавиатуре, как я понял. Но мы используем, < перенаправление, а значит всё меняется, Linux заменяет 
+стандартный дескриптор файла ввода на тот, который указан в команде.
+
+Можно проверить файловый дескриптор во время выполнения процесса
+[Dima@test ~]$ ls -all /proc/1981/fd/
+total 0
+dr-x------. 2 Dima Dima  0 Dec 23 16:08 .
+dr-xr-xr-x. 9 Dima Dima  0 Dec 23 16:08 ..
+lrwx------. 1 Dima Dima 64 Dec 23 16:08 0 -> /dev/pts/0
+lrwx------. 1 Dima Dima 64 Dec 23 16:08 1 -> /dev/pts/0
+lrwx------. 1 Dima Dima 64 Dec 23 16:08 2 -> /dev/pts/0
+
+
+
+3. List all ESTABLISHED TCP connections ONLY with lsof
+[root@test ~]# lsof –I TCP | grep ESTABLISHED
+sshd    1430   root    3u  IPv4  23549      0t0  TCP test.localdomain:ssh->192.168.56.1:56681 (ESTABLISHED)
