@@ -1,0 +1,297 @@
+1. Создать 3 ВМ
+# VM's are created
+
+
+2. На одной из них установить ansible и создать отдельного пользователя, из-под которого он будет запускаться
+# Installation
+[Dima@localhost ~]$ sudo yum install epel-release
+[Dima@localhost ~]$ sudo yum install ansible
+
+# Created inventory file with add anothers VM's
+[Dima@localhost ansible]$ cat inventory
+192.168.56.120
+192.168.56.121
+
+# Added ssh to another VM's
+
+# Checked VM's
+[Dima@localhost ansible]$ sudo ansible all -i inventory -m ping
+192.168.56.121 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+192.168.56.120 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+
+
+3. Используя ansible ad-hoc:
+  - создать такого же пользователя на остальных машинах
+
+# Created users on another VM's
+[Dima@localhost ansible]$ sudo ansible all -i inventory -m user -a "name=Dima"
+
+192.168.56.121 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "comment": "",
+    "create_home": true,
+    "group": 1000,
+    "home": "/home/Dima",
+    "name": "Dima",
+    "shell": "/bin/bash",
+    "state": "present",
+    "system": false,
+    "uid": 1000
+}
+192.168.56.120 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "comment": "",
+    "create_home": true,
+    "group": 1000,
+    "home": "/home/Dima",
+    "name": "Dima",
+    "shell": "/bin/bash",
+    "state": "present",
+    "system": false,
+    "uid": 1000
+}
+
+[Dima@localhost ansible]$ sudo ansible all -i inventory -a "id Dima"
+
+192.168.56.121 | CHANGED | rc=0 >>
+uid=1000(Dima) gid=1000(Dima) groups=1000(Dima)
+192.168.56.120 | CHANGED | rc=0 >>
+uid=1000(Dima) gid=1000(Dima) groups=1000(Dima)
+
+  - подложить ему ssh-ключи
+
+# Created directory for SSH
+[Dima@localhost ansible]$ sudo ansible all -i inventory -m file -a 'path=/home/Dima/.ssh owner=Dima mode=0700 state=directory' --ask-pass
+SSH password:
+192.168.56.120 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "gid": 0,
+    "group": "root",
+    "mode": "0700",
+    "owner": "Dima",
+    "path": "/home/Dima/.ssh",
+    "secontext": "unconfined_u:object_r:ssh_home_t:s0",
+    "size": 29,
+    "state": "directory",
+    "uid": 1000
+}
+192.168.56.121 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "gid": 0,
+    "group": "root",
+    "mode": "0700",
+    "owner": "Dima",
+    "path": "/home/Dima/.ssh",
+    "secontext": "unconfined_u:object_r:ssh_home_t:s0",
+    "size": 29,
+    "state": "directory",
+    "uid": 1000
+}
+
+# Copy SSH-keys
+[Dima@localhost ansible]$ sudo ansible all -i inventory -m copy -a 'src=/home/Dima/.ssh/id_rsa.pub dest=/home/Dima/.ssh/authorized_keys owner=Dima mode=0400' --ask-pass
+SSH password:
+192.168.56.120 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "checksum": "4488ffa5e7f222d0edb7889a69448bcf14c36abc",
+    "dest": "/home/Dima/.ssh/authorized_keys",
+    "gid": 0,
+    "group": "root",
+    "md5sum": "4027dace7ba3cae4fc036c9511d9f257",
+    "mode": "0400",
+    "owner": "Dima",
+    "secontext": "unconfined_u:object_r:ssh_home_t:s0",
+    "size": 408,
+    "src": "/root/.ansible/tmp/ansible-tmp-1648146358.1-2302-234128709168053/source",
+    "state": "file",
+    "uid": 1000
+}
+192.168.56.121 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "checksum": "4488ffa5e7f222d0edb7889a69448bcf14c36abc",
+    "dest": "/home/Dima/.ssh/authorized_keys",
+    "gid": 0,
+    "group": "root",
+    "md5sum": "4027dace7ba3cae4fc036c9511d9f257",
+    "mode": "0400",
+    "owner": "Dima",
+    "secontext": "unconfined_u:object_r:ssh_home_t:s0",
+    "size": 408,
+    "src": "/root/.ansible/tmp/ansible-tmp-1648146358.1-2304-188162793536119/source",
+    "state": "file",
+    "uid": 1000
+}
+
+  - дать возможность использовать sudo (помните о том, что редактирование /etc/sudoers не через visudo - плохая идея)
+
+# Changed inventory file
+192.168.56.120 ansible_user=Dima ansible_become=true ansible_become_pass=1
+192.168.56.121 ansible_user=Dima ansible_become=true ansible_become_pass=1
+
+# Cheked 
+[Dima@localhost ansible]$ ansible all -i inventory -m shell -a "whoami"
+192.168.56.121 | CHANGED | rc=0 >>
+root
+192.168.56.120 | CHANGED | rc=0 >>
+root
+
+
+4. написать плейбук, со ролями
+
+# My playbook file
+
+---
+- hosts: all
+  become: yes
+  vars:
+    mysql_root_pass: "1"
+  tasks:
+
+  - name: Add user to remote hosts
+    user: name=Dima password={{ mysql_root_pass | password_hash('sha512') }} state=present
+
+  - name: Add SSH keys to remote hosts
+    authorized_key: user=Dima key="{{ lookup('file', "/home/Dima/.ssh/id_rsa.pub") }}" state=present
+
+  - name: Upgrade all packages
+    yum:
+      name: '*'
+      state: latest
+
+  - name: Install NTP
+    yum:
+      name: ntp
+      state: installed
+
+  - name: Copy over the NTP configuration
+    copy:
+      src=/home/Dima/ansible/ntp.conf.j2
+      dest=/etc/ntp.conf
+      remote_src=false
+    notify:
+    - restart_ntpd
+
+  - name: Download mysql
+    get_url:
+      url: https://dev.mysql.com/get/mysql80-community-release-el7-5.noarch.rpm
+      dest: /tmp/mysql80-community-release-el7-5.noarch.rpm
+
+  - name: Get mysql
+    yum:
+      name: /tmp/mysql80-community-release-el7-5.noarch.rpm
+      state: present
+
+  - name: Install mysql-server
+    yum:
+      name: mysql-server
+      state: present
+
+  - name: Up mysql
+    systemd:
+      state: started
+      name: mysqld
+
+  - name: Install python
+    yum:
+      name: python2-PyMySQL
+      state: present
+
+  - name: Create a new database with name test
+    mysql_db:
+      name: test
+      state: present
+      login_user: root
+
+  - name: Create MySQL user
+    mysql_user: name={{ db_name }} password={{ db_pass }} priv={{ db_name }}.*:ALL login_user=test login_password={{ mysql_root_pass }} state=present
+
+  handlers:
+  - name: restart_ntpd
+    service: name=ntpd state=restarted enabled=yes
+    
+ # Playbook result
+[Dima@localhost ansible]$ ansible-playbook task4.yml -i inventory
+
+PLAY [all] *********************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [192.168.56.121]
+ok: [192.168.56.123]
+
+TASK [Add user to remote hosts] ************************************************
+changed: [192.168.56.121]
+changed: [192.168.56.123]
+
+TASK [Add SSH keys to remote hosts] ********************************************
+ok: [192.168.56.121]
+ok: [192.168.56.123]
+
+TASK [Upgrade all packages] ****************************************************
+ok: [192.168.56.121]
+ok: [192.168.56.123]
+
+TASK [Install NTP] *************************************************************
+ok: [192.168.56.121]
+ok: [192.168.56.123]
+
+TASK [Copy over the NTP configuration] *****************************************
+ok: [192.168.56.123]
+ok: [192.168.56.121]
+
+TASK [Download mysql] **********************************************************
+ok: [192.168.56.121]
+ok: [192.168.56.123]
+
+TASK [Get mysql] ***************************************************************
+ok: [192.168.56.123]
+ok: [192.168.56.121]
+
+TASK [Install mysql-server] ****************************************************
+ok: [192.168.56.123]
+ok: [192.168.56.121]
+
+TASK [Up mysql] ****************************************************************
+ok: [192.168.56.121]
+ok: [192.168.56.123]
+
+TASK [Install python] **********************************************************
+ok: [192.168.56.123]
+ok: [192.168.56.121]
+
+TASK [Create a new database with name test] ************************************
+fatal: [192.168.56.123]: FAILED! => {"changed": false, "msg": "unable to find /root/.my.cnf. Exception message: (1045, u\"Access denied for user 'root'@'localho                                                                                                             st' (using password: NO)\")"}
+fatal: [192.168.56.121]: FAILED! => {"changed": false, "msg": "unable to find /root/.my.cnf. Exception message: (1045, u\"Access denied for user 'root'@'localho                                                                                                             st' (using password: NO)\")"}
+
+PLAY RECAP *********************************************************************
+192.168.56.121             : ok=11   changed=1    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0
+192.168.56.123             : ok=11   changed=1    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0
