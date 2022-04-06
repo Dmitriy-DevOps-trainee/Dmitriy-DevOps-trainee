@@ -182,6 +182,7 @@ CONTAINER ID        IMAGE                     COMMAND             CREATED       
 621a8021dbfe        gitlab/gitlab-ce:latest   "/assets/wrapper"   5 minutes ago       Up 5 minutes (healthy)   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 0.0.0.0:2289->22/tcp   gitlab
 
 # Watch Zip file
+https://github.com/Dmitriy-DevOps-trainee/Main/raw/2838489ede550373976bc4b37e72ba79444793a0/Task%203.%20GitLab%20Community%20Edition.zip
 Необходимо сделать скриншоты на всех последующих этапах и приложить в виде архива
   2. Создать группу "devops-course"
   3. Создать пользователей: developer1 и developer2
